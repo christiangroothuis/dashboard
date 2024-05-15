@@ -11,7 +11,7 @@ df = pd.DataFrame({
 })
 
 barchart_layout = dcc.Graph(
-            id='scatter-plot',
+            id='bar-shart',
             figure={
                 'data': [
                     go.Scatter(

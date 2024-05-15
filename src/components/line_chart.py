@@ -11,7 +11,7 @@ df = pd.DataFrame({
 })
 
 linechart_layout = dcc.Graph(
-            id='scatter-plot',
+            id='line-chart',
             figure={
                 'data': [
                     go.Scatter(

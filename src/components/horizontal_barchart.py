@@ -11,7 +11,7 @@ df = pd.DataFrame({
 })
 
 h_barchart_layout = dcc.Graph(
-            id='scatter-plot',
+            id='horizontal-barchart',
             figure={
                 'data': [
                     go.Scatter(
