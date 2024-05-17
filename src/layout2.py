@@ -20,9 +20,9 @@ dash_layout = [
                 style={'width': '48%', 'display': 'inline-block'}),
 
             html.Div([
-                barchart_layout  # html.H1('Welcome to Polocal!', style={'color': '#243E4C', 'display': 'block', 'textAlign': 'center'}), # cannot add "h_barchart_layout"
+                barchart_layout
             ], style={'width': '48%', 'display': 'inline-block'}),
-        ]),
+        ], style={'display': 'flex'}),
 
 
     html.Div([
