@@ -3,47 +3,36 @@ import pandas as pd
 from urllib.request import urlopen
 import json
 import plotly.express as px
-from components.map import map_layout
+from components.map_london import map_layout
 from components.horizontal_barchart import h_barchart_layout
 from components.line_chart import linechart_layout
 from components.bar_chart import barchart_layout
-from dash import Dash, html, dcc, callback, Output, Input, dash_table
-from components.map2 import map_layout2
-
 
 dash_layout = [
     # Heading
     html.Div([html.H1('Welcome to Polocal!', style={'color': '#243E4C', 'display': 'block', 'textAlign': 'center'}),
               ]),
 
-    # Map
-    map_layout,
+    #map_layout,
 
-    # Horizontal barchart
+    html.Div([
+            html.Div(map_layout,
+                style={'width': '48%', 'display': 'inline-block'}),
+
+            html.Div([
+                barchart_layout
+            ], style={'width': '48%', 'display': 'inline-block'}),
+        ], style={'display': 'flex'}),
 
 
-    # Line chart
+    html.Div([
+        html.Div([
+            h_barchart_layout,
+        ], style={'width': '48%', 'display': 'inline-block'}),
 
-
-    # Grouped bar chart
-
+        html.Div([
+            linechart_layout  # html.H1('Welcome to Polocal!', style={'color': '#243E4C', 'display': 'block', 'textAlign': 'center'}), # cannot add "h_barchart_layout"
+        ], style={'width': '48%', 'display': 'inline-block'}),
+    ]),
 
 ]
-
-"""html.Div([
-    map_layout,
-
-    html.Div([
-        h_barchart_layout
-    ], style={'width': '48%', 'display': 'inline-block'})
-]),
-html.Div([
-    html.Div([
-        linechart_layout
-    ], style={'width': '48%', 'display': 'inline-block'}),
-
-    html.Div([
-        barchart_layout
-    ], style={'width': '48%', 'display': 'inline-block'}),
-]),"""
-
