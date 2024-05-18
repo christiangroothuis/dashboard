@@ -22,10 +22,11 @@ def import_geo_borough_data(data_directory, file):
     return geo_data, borough_geo_data
 
 
-def project_convert(geo_data, source='epsg:27700', target='latlong', datum='WGS84'):
+def project_convert(geo_data, data_directory, source='epsg:27700', target='latlong', datum='WGS84'):
     """
     Takes a geojson dictionary and converts it from relative epsg locations to universal latlong.
     :param geo_data: geojson dictionary.
+    :param data_directory: path to data directory.
     :param source: the location data format in geo_data.
     :param target: the location data format after transformation.
     :param datum: the relationship of a coordinate system to the body
