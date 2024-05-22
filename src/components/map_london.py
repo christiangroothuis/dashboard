@@ -3,17 +3,19 @@ import plotly.express as px
 
 # Import preprocessed data
 from .scripts.import_data import df_data, geo_data
+from .map_tabs import map_tabs_layout
 
 
 map_layout = html.Div([
-        dcc.Dropdown(
+        map_tabs_layout,
+        dcc.Graph(id="map"),
+    ])
+"""dcc.Dropdown(
             id='category',
             options=['"Good Job" local', "Contact ward officer", "Informed local", "Listen to concerns",
                      "Relied on to be there", "Treat everyone fairly", "Understand issues", "Trust MPS"],
             value='"Good Job" local',
-        ),
-        dcc.Graph(id="map"),
-    ])
+        ),"""
 
 
 @callback(
