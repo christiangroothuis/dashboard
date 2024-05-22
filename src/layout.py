@@ -10,6 +10,7 @@ from components.line_chart import linechart_layout
 from components.bar_chart import barchart_layout
 from components.scripts.import_data import df_data, geo_data
 from components.map_tabs import map_tabs_layout
+from components.scripts.map_categories import map_categories_dict
 
 # Create the layout
 dash_layout = dbc.Container([
@@ -22,27 +23,35 @@ dash_layout = dbc.Container([
 ], fluid=True)
 
 
+def find_button_attribute(attributes, button_id):
+    sub_attribute = '"Good Job" local'
+    for i, attribute in attributes:
+        if i == button_id:
+            sub_attribute = attribute
+    return sub_attribute
+
+print([Input(str(i), "n_clicks") for i in range(10)])
+
 # Define callback to update map based on dropdown selection
 @callback(
     Output("choropleth-map", "figure"),
-    [Input('"Good Job" local', "n_clicks"),
-     Input('Informed local', "n_clicks"),
-     Input('Listen to concerns', "n_clicks"),
-     Input('Relied on to be there', "n_clicks"),
-     Input('Understand issues', "n_clicks")]
+    [Input(str(i), "n_clicks") for i in range(10)]
 )
-def update_map(good_job_local, informed_local, listen_concerns, relied_on, understand_issues):
+def update_map(*args):
     ctx = callback_context
     button_id = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else None
 
-    if button_id == '"Good Job" local':
-        sub_attribute = '"Good Job" local'
-    elif button_id == 'Contact ward officer':
-        sub_attribute = 'Contact ward officer'
-    elif button_id == 'Informed local':
-        sub_attribute = 'Informed local'
-    elif button_id == 'Listen to concerns':
-        sub_attribute = 'Listen to concerns'
+    if button_id is None:
+        sub_attribute = '"Good Job" local'  # Default to Trust_score if no button is clicked
+    elif 0 <= int(button_id) <= 4:
+        attributes = map_categories_dict['PAS']['Confidence']
+        sub_attribute = find_button_attribute(attributes, button_id)
+    elif 5 <= int(button_id) <= 7:
+        attributes = map_categories_dict['PAS']['Trust']
+        sub_attribute = find_button_attribute(attributes, button_id)
+    elif 8 <= int(button_id) <= 9:
+        attributes = map_categories_dict['PAS']['Other']
+        sub_attribute = find_button_attribute(attributes, button_id)
     else:
         sub_attribute = None
 

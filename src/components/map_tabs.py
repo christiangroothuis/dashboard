@@ -24,29 +24,22 @@ def create_nested_dropdown(map_categories_dict, key_path):
 
     new_dropdown_children = list()
     for successor_key in successor_keys:
-        print('successor_key', successor_key)
         successor_key_path = key_path.copy()
         successor_key_path.append(successor_key)
 
         children = create_nested_dropdown(map_categories_dict, successor_key_path)
 
         if children is None:
-            new_dropdown_children.append(dbc.DropdownMenuItem(successor_key, id=successor_key))
+            ID, key = successor_key
+            new_dropdown_children.append(dbc.DropdownMenuItem(key, id=ID))
         else:
-            print('children not none!')
-            print(children)
-            print(type(children))
-            print(len(children))
-
             new_dropdown_children.append(dbc.DropdownMenu(label=successor_key, id=successor_key, children=children))
-            print('children not none POST!')
     return new_dropdown_children
 
 
 def main_dropdowns(map_categories_dict, key):
 
     children = create_nested_dropdown(map_categories_dict, [key])
-    print('hello', children)
 
     return dbc.Col(dbc.DropdownMenu(
         label=key,
@@ -58,22 +51,3 @@ def main_dropdowns(map_categories_dict, key):
 
 
 map_tabs_layout = [main_dropdowns(map_categories_dict, key) for key in map_categories_dict]
-
-"""map_tabs_layout = [dbc.Col(dbc.DropdownMenu(
-    label="Trust",
-    children=[
-        dbc.DropdownMenuItem("Trust Score", id="trust-score"),
-        dbc.DropdownMenuItem("Response Time", id="response-time"),
-    ],
-    direction="down",
-    className="me-1"
-), width="auto"),
-    dbc.Col(dbc.DropdownMenu(
-        label="Confidence",
-        children=[
-            dbc.DropdownMenuItem("Confidence Score", id="confidence-score"),
-            dbc.DropdownMenuItem("Public Opinion", id="public-opinion"),
-        ],
-        direction="down",
-        className="me-1"
-    ), width="auto")]"""
