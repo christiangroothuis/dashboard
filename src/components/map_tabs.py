@@ -3,6 +3,12 @@ from .scripts.map_categories import map_categories_dict
 
 
 def get_nested_value(d, key_path):
+    """
+    Extracts item of dictionary for a key.
+    :param d: dictionary but with exception.
+    :param key_path: list of keys contained in map_categories_dict.
+    :return: Sub-dictionary, with None as exception.
+    """
     if key_path is None: return None
     for key in key_path:
         if type(d) == dict:
@@ -13,6 +19,12 @@ def get_nested_value(d, key_path):
 
 
 def create_nested_dropdown(map_categories_dict, key_path):
+    """
+    Recursively defines the children of the DropdownMenu.
+    :param map_categories_dict: dictionary of all attributes to be displayed.
+    :param key_path: list of keys contained in map_categories_dict.
+    :return: children of its parent DropdownMenu.
+    """
     successor = get_nested_value(map_categories_dict, key_path)
     successor_keys = None
     if type(successor) == dict:
@@ -38,8 +50,12 @@ def create_nested_dropdown(map_categories_dict, key_path):
 
 
 def main_dropdowns(map_categories_dict, key):
-
-    children = create_nested_dropdown(map_categories_dict, [key])
+    """
+    Creates a nested DropdownMenu for all attributes rooted at the most outer category in map_categories_dict
+    :param map_categories_dict:
+    :param key: The most outer key value, type str.
+    :return: a column containing a DropdownMenu.
+    """
 
     return dbc.Col(dbc.DropdownMenu(
         label=key,
@@ -50,4 +66,5 @@ def main_dropdowns(map_categories_dict, key):
     ), width="auto")
 
 
+# Defines the layout of all most outer DropdownMenus in map_categories_dict
 map_tabs_layout = [main_dropdowns(map_categories_dict, key) for key in map_categories_dict]

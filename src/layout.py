@@ -1,18 +1,16 @@
-from dash import Dash, html, dcc, callback, Output, Input, dash_table, callback_context
-import pandas as pd
+from dash import dcc, callback, Output, Input, callback_context
 import dash_bootstrap_components as dbc
-from urllib.request import urlopen
-import json
 import plotly.express as px
-from components.map_london import map_layout
-from components.horizontal_barchart import h_barchart_layout
-from components.line_chart import linechart_layout
-from components.bar_chart import barchart_layout
+
+# Internal imports
 from components.scripts.import_data import df_data, geo_data
 from components.map_tabs import map_tabs_layout
 from components.scripts.map_categories import map_categories_dict
 
+
+# ====================================
 # Create the layout
+# ====================================
 dash_layout = dbc.Container([
     dbc.Row([
         *map_tabs_layout,
@@ -30,7 +28,6 @@ def find_button_attribute(attributes, button_id):
             sub_attribute = attribute
     return sub_attribute
 
-print([Input(str(i), "n_clicks") for i in range(10)])
 
 # Define callback to update map based on dropdown selection
 @callback(
@@ -38,9 +35,15 @@ print([Input(str(i), "n_clicks") for i in range(10)])
     [Input(str(i), "n_clicks") for i in range(10)]
 )
 def update_map(*args):
+    """
+    Updates the choropleth plot based on the nested dropdown.
+    :param args: the IDs of all selectable categories in the nested drop-downs.
+    :return: choropleth plot.
+    """
     ctx = callback_context
     button_id = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else None
 
+    # Find out what attribute should be displayed in plot depending on IDs of type str(int).
     if button_id is None:
         sub_attribute = '"Good Job" local'  # Default to Trust_score if no button is clicked
     elif 0 <= int(button_id) <= 4:
@@ -58,6 +61,7 @@ def update_map(*args):
     if sub_attribute is None:
         sub_attribute = '"Good Job" local'  # Default to Trust_score if no button is clicked
 
+    # Define the choropleth plot
     fig = px.choropleth(
         data_frame=df_data, geojson=geo_data, locations="Borough", featureidkey="properties.name",
         color=sub_attribute, color_continuous_scale='viridis',
