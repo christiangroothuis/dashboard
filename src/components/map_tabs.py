@@ -2,7 +2,7 @@ import dash_bootstrap_components as dbc
 from .scripts.map_categories import map_categories_dict
 
 
-def get_nested_value(d, key_path):
+def get_nested_value(d, key_path: list):
     """
     Extracts item of dictionary for a key.
     :param d: dictionary but with exception.
@@ -18,7 +18,7 @@ def get_nested_value(d, key_path):
     return d
 
 
-def create_nested_dropdown(map_categories_dict, key_path):
+def create_nested_dropdown(map_categories_dict: dict, key_path: list):
     """
     Recursively defines the children of the DropdownMenu.
     :param map_categories_dict: dictionary of all attributes to be displayed.
@@ -49,7 +49,7 @@ def create_nested_dropdown(map_categories_dict, key_path):
     return new_dropdown_children
 
 
-def main_dropdowns(map_categories_dict, key):
+def main_dropdowns(map_categories_dict: dict, key: str):
     """
     Creates a nested DropdownMenu for all attributes rooted at the most outer category in map_categories_dict
     :param map_categories_dict:

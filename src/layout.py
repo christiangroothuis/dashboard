@@ -21,7 +21,7 @@ dash_layout = dbc.Container([
 ], fluid=True)
 
 
-def find_button_attribute(attributes, button_id):
+def find_button_attribute(attributes: tuple, button_id: str):
     sub_attribute = '"Good Job" local'
     for i, attribute in attributes:
         if i == button_id:
