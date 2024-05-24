@@ -68,7 +68,7 @@ def main_dropdowns(map_categories_dict: dict, key: str):
         id=key,
         children=x,
         className="menu-level0",
-    ))
+    ), style={'margin-right': '45px'})
 
 
 # Defines the layout of all most outer DropdownMenus in map_categories_dict

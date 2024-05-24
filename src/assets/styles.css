@@ -1,8 +1,6 @@
 /*Color and position*/
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
-.app_container{
-    'font-family': 'Outfit', sans-serif; /*Doesn't work*/
-    width: calc(100% + 100px);
+.container {
+    max-width: 100% !important;
 }
 .top-panel{
     display: flex;
@@ -26,7 +24,6 @@
     display: flex;
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
-    margin-top: -20px; /* Adjust the value as needed */
 }
 .dbc-navbar {
     background-color: white!important;
@@ -47,6 +44,7 @@
     max-width: 250px;
     font-size: 1.5rem;
     cursor: pointer;
+    /*font-weight: bold;*/
 }
 .menu-level0-content {
     position: relative;
@@ -147,105 +145,3 @@
 
 
 
-
-
-
-/*
-.menu-level1, .menu-level2 {
-    display: none;
-    position: absolute;
-    left: 100%;
-    top:0;
-    width: 208px;
-    padding: 10px;
-    min-height: 200px;
-    z-index: 1;
-    background: #ffff;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    border-radius: 6px;
-}
-/*
-.menu-level0 .menu-level0-title:hover +.menu-level1 {
-    display: block !important;
-    position: relative!important;
-}
-
-.menu-level1-inner .menu-level1-title:hover +.menu-level2 {
-    display: block !important;
-    position: relative!important;
-}
-
-*/
-
-
-
-
-
-/*
-.menu-title {
-    display: block;
-    border:1px solid #ededed;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    margin: 5px;
-    padding: 11px;
-    border-radius: 6px;
-    max-width: 250px;
-}
-
-.me-1 .menu-title:hover + .menu-first {
-    display: block !important;
-}
-
-.menu-first {
-    display: none;
-    position: absolute;
-    left: 100%;
-    top:0;
-    width: 208px;
-    padding: 10px;
-    min-height: 200px;
-    z-index: 1;
-    background: #ffff;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    border-radius: 6px;
-    margin: 5px;
-    max-width: 250px;
-}
-
-.me-0 {
-    position: relative;
-}
-.second-menu {
-    position: relative;
-}
-
-.menu-first .second-menu-title:hover +.second-menu {
-    display: block !important;
-}
-
-.second-menu {
-    display: none;
-    position: absolute;
-    left: 100%;
-    top:0;
-    width: 208px;
-    padding: 10px;
-    min-height: 200px;
-    z-index: 1;
-    background: #ffff;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    border-radius: 6px;
-}
-*/
-
-
-
-
-
-
-
-
-
-.container {
-    max-width: 100% !important;
-}
