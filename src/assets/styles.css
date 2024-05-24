@@ -1,0 +1,251 @@
+/*Color and position*/
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
+.app_container{
+    'font-family': 'Outfit', sans-serif; /*Doesn't work*/
+    width: calc(100% + 100px);
+}
+.top-panel{
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    color: black;
+    background-color: #F3F3F3;
+    font-size: 0.8rem;
+    padding: 7px;
+    font-weight: lighter;
+}
+.polocal-header {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    color: #0032A0;
+    font-size: 4rem;
+    margin-top: 40px; /* Adjust the value as needed */
+}
+.menu-level0, .sidebar-button {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    margin-top: -20px; /* Adjust the value as needed */
+}
+.dbc-navbar {
+    background-color: white!important;
+    border-bottom: 1px solid lightgrey; /* Add a 1px solid border at the bottom */
+}
+.bg-light {
+    --bs-bg-opacity: 1;
+    background-color: white !important;
+}
+
+/*Clickable boxes general styling*/
+.menu-level0-title {
+    text-align: center;
+    width: 208px;
+    z-index: 1;
+    padding: 10px;
+    background: #ffff;
+    max-width: 250px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+.menu-level0-content {
+    position: relative;
+    background: #ffff;
+    border:1px solid #ededed;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin: 5px;
+    top: 70%;
+    padding: 11px;
+    border-radius: 6px;
+    max-width: 250px;
+    width: 208px;
+    /*min-height: 200px;*/
+    z-index: 1;
+}
+.menu-level1-content {
+    position: absolute;
+    background: #ffff;
+    border:1px solid #ededed;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin: 5px;
+    left: 90%;
+    padding: 11px;
+    border-radius: 6px;
+    max-width: 250px;
+    top:0;
+    width: 208px;
+    /*min-height: 200px;*/
+    z-index: 1;
+}
+
+/*Default display state*/
+.menu-level0-title {
+    display: block;
+    cursor: pointer;
+}
+.menu-level0-content, .menu-level1-content {
+    display: none;
+}
+
+/*Open and close menu bars*/
+.menu-level0 .menu-level0-title:hover +.menu-level0-content,
+.menu-level0 .menu-level0-content:hover,
+.menu-level1:hover .menu-level1-content,
+.menu-level1 .menu-level1-content:hover{
+    display: block !important;
+    position: absolute!important;
+    cursor: pointer;
+}
+
+/*Change color when hover over text*/
+.menu-level0-title:hover, .menu-level1-title:hover, .menu-level2:hover {
+    color: #0032A0;
+    font-weight: bold;
+}
+
+#sidebar:hover {
+  width: 300px;
+}
+
+.mb-2 {
+    margin-bottom: 0 !important;
+}
+.row>* {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right: 0;
+    padding-left: 0;
+    margin-top: 0;
+}
+
+/*Slide in*/
+.slide-in {
+    z-index: 10; /* to position it in front of the other content */
+    position: absolute;
+    overflow: hidden; /* to prevent scrollbar appearing */
+    left: 0;
+    width: 400px;
+    height: 700px;
+    text-align: center;
+    color: white;
+}
+.slide-in-content {
+  padding: 5px 20px;
+  background: #0032A0;
+    height: 700px;
+  transition: transform .5s ease; /* our nice transition */
+}
+.slide-in .slide-in-content {
+  transform: translateX(-100%);
+  -webkit-transform: translateX(-100%);
+}
+.slide-in.show .slide-in-content {
+  transform: translateX(0);
+  -webkit-transform: translateX(0);
+}
+
+
+
+
+
+
+/*
+.menu-level1, .menu-level2 {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top:0;
+    width: 208px;
+    padding: 10px;
+    min-height: 200px;
+    z-index: 1;
+    background: #ffff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+}
+/*
+.menu-level0 .menu-level0-title:hover +.menu-level1 {
+    display: block !important;
+    position: relative!important;
+}
+
+.menu-level1-inner .menu-level1-title:hover +.menu-level2 {
+    display: block !important;
+    position: relative!important;
+}
+
+*/
+
+
+
+
+
+/*
+.menu-title {
+    display: block;
+    border:1px solid #ededed;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin: 5px;
+    padding: 11px;
+    border-radius: 6px;
+    max-width: 250px;
+}
+
+.me-1 .menu-title:hover + .menu-first {
+    display: block !important;
+}
+
+.menu-first {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top:0;
+    width: 208px;
+    padding: 10px;
+    min-height: 200px;
+    z-index: 1;
+    background: #ffff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    margin: 5px;
+    max-width: 250px;
+}
+
+.me-0 {
+    position: relative;
+}
+.second-menu {
+    position: relative;
+}
+
+.menu-first .second-menu-title:hover +.second-menu {
+    display: block !important;
+}
+
+.second-menu {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top:0;
+    width: 208px;
+    padding: 10px;
+    min-height: 200px;
+    z-index: 1;
+    background: #ffff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+}
+*/
+
+
+
+
+
+
+
+
+
+.container {
+    max-width: 100% !important;
+}

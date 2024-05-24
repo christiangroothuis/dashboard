@@ -1,22 +1,8 @@
 import dash_bootstrap_components as dbc
+import dash
+from dash import html
 from .scripts.map_categories import map_categories_dict
-
-
-def get_nested_value(d, key_path: list):
-    """
-    Extracts item of dictionary for a key.
-    :param d: dictionary but with exception.
-    :param key_path: list of keys contained in map_categories_dict.
-    :return: Sub-dictionary, with None as exception.
-    """
-    if key_path is None: return None
-    for key in key_path:
-        if type(d) == dict:
-            d = d.get(key)
-        else:
-            return None
-    return d
-
+from dash_iconify import DashIconify
 
 def create_nested_dropdown(map_categories_dict: dict, key_path: list):
     """
@@ -43,10 +29,30 @@ def create_nested_dropdown(map_categories_dict: dict, key_path: list):
 
         if children is None:
             ID, key = successor_key
-            new_dropdown_children.append(dbc.DropdownMenuItem(key, id=ID))
+            new_dropdown_children.append(html.Div(key, id=ID, className='menu-level2'))
         else:
-            new_dropdown_children.append(dbc.DropdownMenu(label=successor_key, id=successor_key, children=children))
+            # children.append(html.Span(successor_key,className='menu-title'))
+            children = [html.Span(successor_key, className='menu-level1-title'),
+                        html.Div(children, className='menu-level1-content')]
+            new_dropdown_children.append(html.Div(id=successor_key,
+                                                  children=children, className="menu-level1"))
     return new_dropdown_children
+
+
+def get_nested_value(d, key_path: list):
+    """
+    Extracts item of dictionary for a key.
+    :param d: dictionary but with exception.
+    :param key_path: list of keys contained in map_categories_dict.
+    :return: Sub-dictionary, with None as exception.
+    """
+    if key_path is None: return None
+    for key in key_path:
+        if type(d) == dict:
+            d = d.get(key)
+        else:
+            return None
+    return d
 
 
 def main_dropdowns(map_categories_dict: dict, key: str):
@@ -56,14 +62,13 @@ def main_dropdowns(map_categories_dict: dict, key: str):
     :param key: The most outer key value, type str.
     :return: a column containing a DropdownMenu.
     """
-
-    return dbc.Col(dbc.DropdownMenu(
-        label=key,
+    x = [html.Span(key, className='menu-level0-title'), html.Div(create_nested_dropdown(map_categories_dict, [key]),
+                                                                 className='menu-level0-content')]
+    return dbc.Col(html.Div(
         id=key,
-        children=create_nested_dropdown(map_categories_dict, [key]),
-        direction="down",
-        className="me-1"
-    ), width="auto")
+        children=x,
+        className="menu-level0",
+    ))
 
 
 # Defines the layout of all most outer DropdownMenus in map_categories_dict

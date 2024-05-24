@@ -1,24 +1,32 @@
-from dash import dcc, callback, Output, Input, callback_context
+from dash import dcc, callback, Output, Input, callback_context, State
 import dash_bootstrap_components as dbc
 import plotly.express as px
 
 # Internal imports
-from components.scripts.import_data import df_data, geo_data
 from components.map_tabs import map_tabs_layout
+from components.side_nav import button, side_bar # getAppHeader # side_navbar, Btn1
+from components.scripts.import_data import df_data, geo_data
 from components.scripts.map_categories import map_categories_dict
+from dash import html
 
 
 # ====================================
 # Create the layout
 # ====================================
+
 dash_layout = dbc.Container([
+    html.Link(href='/assets/styles.css', rel='stylesheet'),
     dbc.Row([
-        *map_tabs_layout,
+        dbc.Row(html.H1('Powered by the TU/e', className='top-panel')),
+        dbc.Row(html.H1('𝓟oL𝛔cal', className='polocal-header')),
+        dbc.Row(dbc.Navbar([button, *map_tabs_layout]
+        ), className="dbc-navbar",)
     ], className="mb-2"),
     dbc.Row([
-        dbc.Col(dcc.Graph(id="choropleth-map"), width=12)
+        dbc.Col(side_bar, style={'width': '100px'}),
+        dbc.Col(dcc.Graph(id="choropleth-map"),  style={'width': '900px'}, width=4),
     ])
-], fluid=True)
+], fluid=True, className='container')
 
 
 def find_button_attribute(attributes: tuple, button_id: str):
@@ -67,6 +75,13 @@ def update_map(*args):
         color=sub_attribute, color_continuous_scale='viridis',
         projection="mercator")
     fig.update_geos(fitbounds='locations', visible=False)
-    fig.update_layout(margin={'l': 40, 'b': 40, 't': 40, 'r': 40})
+    fig.update_layout(margin={'l': 0, 'b': 0, 't': 0, 'r': 0},
+                      width=800,
+                      height=600)
+
+    fig.update_coloraxes(colorbar_len=0.5)
 
     return fig
+
+
+
