@@ -1,4 +1,3 @@
-# General Imports
 import dash
 from dash import html
 from layout import dash_layout
