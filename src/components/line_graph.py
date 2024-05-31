@@ -111,8 +111,8 @@ def toggle_tooltip(n_clicks, style):
 # Callback to update the graph based on dropdown selection
 @callback(
     Output('line-chart', 'figure'),
-    Input('response-dropdown', 'value'),
-    Input('borough-dropdown', 'value')
+    [Input('response-dropdown', 'value'),
+     Input('borough-dropdown', 'value')]
 )
 def update_graph(selected_response, selected_boroughs):
     filtered_df = df[df['Q13'] == selected_response]
