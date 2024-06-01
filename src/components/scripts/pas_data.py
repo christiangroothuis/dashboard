@@ -9,17 +9,50 @@ import numpy as np
 from pyproj import Proj, transform
 import json
 
-data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
+data_directory = './data/'
 
+import csv
+
+# Path to the input file
+input_file_path = './data/pas_data2.csv'
+
+# Define the column names without the 'Survey' column
+column_names = ["Date", "Borough", "Measure", "Proportion", "MPS"]
+
+# Create a list to hold the parsed data
+parsed_data = []
+
+# Open and read the input file
+with open(input_file_path, 'r') as infile:
+    for row in infile:
+        # Strip any leading/trailing whitespace and split by comma
+        split_row = row.strip().split(',')
+        # Drop the 'Survey' column (index 1) and append the relevant columns
+        parsed_data.append([split_row[0], split_row[2], split_row[3], split_row[4], split_row[5]])
+
+# Print the parsed data (optional)
+print(parsed_data)
+
+# Print the parsed data (optional)
+#print(parsed_data)
+
+# Overwrite the input file with the parsed data
+with open(input_file_path, 'w', newline='') as csvfile:
+    writer = csv.writer(csvfile)
+    # Write the column headers
+    writer.writerow(column_names)
+    # Write the data rows
+    writer.writerows(parsed_data)
 
 def import_clean_PAS_data(data_directory):
     # Import PAS data
-    df_data = pd.read_csv(os.path.join(data_directory, 'pas_data3.csv'), delimiter=";")
-    df_data = df_data.drop(columns='Survey', axis=1)  # Clean unnecessary column
-
+ #   df_data = pd.read_csv(os.path.join(data_directory, 'pas_data3.csv'), delimiter=";")
+  #  df_data = df_data.drop(columns='Survey', axis=1)  # Clean unnecessary column
+    df_data = './data/pas_data2.csv'
+   # df_data = df_data.drop(columns='Survey', axis=1)  # Clean unnecessary column
     # Change column type of 'Date' to datetime, filter on just one date (for now)
-    df_data['Date'] = pd.to_datetime(df_data['Date'])
-    df_data = df_data[~(df_data['Date'] == datetime.date(2014, 12, 31))]
+    # df_data['Date'] = pd.to_datetime(df_data['Date'])
+    # df_data = df_data[~(df_data['Date'] == datetime.date(2014, 12, 31))]
     df_data['Proportion'] = df_data['Proportion'].str.replace(',', '.').astype(float)
     return df_data
 
