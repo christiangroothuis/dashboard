@@ -9,12 +9,13 @@ from .geo_borough import import_geo_borough_data, project_convert
 
 
 # Variables
-#data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
+# data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
 # inProj = Proj('epsg:27700')
 # outProj = Proj(proj='latlong', datum='WGS84')
-# Data path
-data_directory = '.\data'
-
+#
+data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'police-data-analysis2/data')
+inProj = Proj('epsg:27700')
+outProj = Proj(proj='latlong', datum='WGS84')
 # PAS import
 df_data = import_clean_PAS_data(data_directory)
 pas_categories = df_data['Measure'].unique()
