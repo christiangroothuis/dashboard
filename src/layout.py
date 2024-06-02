@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 # Internal imports
 from components.map_tabs import map_tabs_layout
 from components.side_nav import button, side_bar # getAppHeader # side_navbar, Btn1
-from components.line_graph import line_graph_layout
+# from components.line_graph import line_graph_layout
 from components.correlation_graph import correlation_graph_layout
 from components.h_bar_chart import h_barchart_layout
 from components.map_tabs import choropleth_map_layout
