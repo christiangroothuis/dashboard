@@ -11,7 +11,7 @@ columns_to_keep = ['MONTH', 'Borough', 'Q13']
 #    r'C:\Users\20212444\Desktop\TUe\year2 (DA)\Q4\Data Challenge 2\pas_data_ward_level\PAS_ward_level_FY_20_21.csv',
 #    usecols=columns_to_keep, low_memory=False)
 
-data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
+data_directory = os.path.join(Path(os.getcwd()).parent, 'data')
 df = pd.read_csv(os.path.join(data_directory,'pas_data_ward_level/PAS_ward_level_FY_20_21.csv'))
 
 # Create a list of unique responses, filtering out any null values

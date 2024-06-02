@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from dash import html, callback, Input, Output, callback_context, dcc
+from dash import html, callback, Input, Output, callback_context, dcc , State
 from .scripts.map_categories import map_categories_dict
 import plotly.express as px
 from .scripts.import_data import df_data, geo_data
@@ -86,17 +86,117 @@ map_tabs_layout = [main_dropdowns(map_categories_dict, key) for key in map_categ
 choropleth_map_layout = dcc.Graph(id="choropleth-map")
 
 
-# Define callback to update map based on dropdown selection
+
+
+from dash import callback_context
+
+
+
+# @callback(
+#     Output("choropleth-map", "figure"),
+#     [Input(str(i), "n_clicks") for i in range(10)]
+# )
+# def update_map(*args):
+#     """
+#     Updates the choropleth plot based on the nested dropdown.
+#     :param args: the IDs of all selectable categories in the nested drop-downs.
+#     :return: choropleth plot.
+#     """
+#     ctx = callback_context
+#     button_id = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else None
+#
+#     # Find out what attribute should be displayed in plot depending on IDs of type str(int).
+#     if button_id is None:
+#         sub_attribute = '"Good Job" local'  # Default to Trust_score if no button is clicked
+#     elif 0 <= int(button_id) <= 4:
+#         attributes = map_categories_dict['PAS']['Confidence']
+#         sub_attribute = find_button_attribute(attributes, button_id)
+#     elif 5 <= int(button_id) <= 7:
+#         attributes = map_categories_dict['PAS']['Trust']
+#         sub_attribute = find_button_attribute(attributes, button_id)
+#     elif 8 <= int(button_id) <= 9:
+#         attributes = map_categories_dict['PAS']['Other']
+#         sub_attribute = find_button_attribute(attributes, button_id)
+#     else:
+#         sub_attribute = None
+#
+#     if sub_attribute is None:
+#         sub_attribute = '"Good Job" local'  # Default to Trust_score if no button is clicked
+#
+#     # Define the choropleth plot
+#     fig = px.choropleth(
+#         data_frame=df_data, geojson=geo_data, locations="Borough", featureidkey="properties.name",
+#         color=sub_attribute, color_continuous_scale='viridis',
+#         projection="mercator")
+#     fig.update_geos(fitbounds='locations', visible=False)
+#     fig.update_layout(margin={'l': 0, 'b': 0, 't': 0, 'r': 0},
+#                       width=800,
+#                       height=600)
+#
+#     fig.update_coloraxes(colorbar_len=0.5)
+#
+#     return fig
+
+# Test 2
+
+
+
+# @callback(
+#     [Output("choropleth-map", "figure"), Output('stored_BR_data', 'data')],
+#     [Input("choropleth-map", "clickData")],
+#     [State('stored_BR_data', 'data')]  # Add State to preserve existing selections
+# )
+# def update_map(clickData, stored_BR_data):
+#     ctx = callback_context
+#     button_id = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else None
+#
+#     # Find out what attribute should be displayed in plot depending on IDs of type str(int).
+#     if button_id is None:
+#         sub_attribute = '"Good Job" local'  # Default to Trust_score if no button is clicked
+#     elif 0 <= int(button_id) <= 4:
+#         attributes = map_categories_dict['PAS']['Confidence']
+#         sub_attribute = find_button_attribute(attributes, button_id)
+#     elif 5 <= int(button_id) <= 7:
+#         attributes = map_categories_dict['PAS']['Trust']
+#         sub_attribute = find_button_attribute(attributes, button_id)
+#     elif 8 <= int(button_id) <= 9:
+#         attributes = map_categories_dict['PAS']['Other']
+#         sub_attribute = find_button_attribute(attributes, button_id)
+#     else:
+#         sub_attribute = None
+#
+#     if sub_attribute is None:
+#         sub_attribute = '"Good Job" local'  # Default to Trust_score if no button is clicked
+#
+#     if clickData:
+#         selected_borough = clickData['points'][0]['location']
+#         if selected_borough not in stored_BR_data:
+#             stored_BR_data.append(selected_borough)
+#     else:
+#         stored_BR_data = []
+#
+#     fig = px.choropleth(
+#         data_frame=df_data, geojson=geo_data, locations="Borough", featureidkey="properties.name",
+#         color=sub_attribute, color_continuous_scale='viridis',
+#         projection="mercator")
+#     fig.update_geos(fitbounds='locations', visible=False)
+#     fig.update_layout(margin={'l': 0, 'b': 0, 't': 0, 'r': 0},
+#                       width=800,
+#                       height=600)
+#     fig.update_coloraxes(colorbar_len=0.5)
+#
+#     return fig, stored_BR_data
+
+
+
+#test 3
+
 @callback(
     Output("choropleth-map", "figure"),
-    [Input(str(i), "n_clicks") for i in range(10)]
+    [Input(str(i), "n_clicks") for i in range(10)],
+    prevent_initial_call=True
 )
-def update_map(*args):
-    """
-    Updates the choropleth plot based on the nested dropdown.
-    :param args: the IDs of all selectable categories in the nested drop-downs.
-    :return: choropleth plot.
-    """
+def update_map_attribute(*args):
     ctx = callback_context
     button_id = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else None
 
@@ -122,12 +222,29 @@ def update_map(*args):
     fig = px.choropleth(
         data_frame=df_data, geojson=geo_data, locations="Borough", featureidkey="properties.name",
         color=sub_attribute, color_continuous_scale='viridis',
-        projection="mercator")
+        projection="mercator"
+    )
     fig.update_geos(fitbounds='locations', visible=False)
-    fig.update_layout(margin={'l': 0, 'b': 0, 't': 0, 'r': 0},
-                      width=800,
-                      height=600)
-
+    fig.update_layout(margin={'l': 0, 'b': 0, 't': 0, 'r': 0}, width=800, height=600)
     fig.update_coloraxes(colorbar_len=0.5)
 
     return fig
+
+
+@callback(
+    Output('stored_BR_data', 'data'),
+    [Input("choropleth-map", "clickData")],
+    [State('stored_BR_data', 'data')]
+)
+def update_selected_boroughs(clickData, stored_BR_data):
+    if stored_BR_data is None:
+        stored_BR_data = []
+
+    if clickData:
+        selected_borough = clickData['points'][0]['location']
+        if selected_borough not in stored_BR_data:
+            stored_BR_data.append(selected_borough)
+    else:
+        stored_BR_data = []
+
+    return stored_BR_data
