@@ -26,7 +26,7 @@ dash_layout = dbc.Container([
         dbc.Row(dbc.Navbar([button, *map_tabs_layout], style={'margin-top': '-20px', 'padding': 0}), className="dbc-navbar",)
     ], className="mb-2"),
     dbc.Row([
-        dbc.Col(side_bar, id='sidebar-column', width=3),
+        dbc.Col(side_bar, id='sidebar-column', width=0),
         dbc.Col(
             dbc.Row([
                 dbc.Col(choropleth_map_layout, id='map-column'),
@@ -36,8 +36,8 @@ dash_layout = dbc.Container([
         ),
     ]),
     dbc.Row([
-        dbc.Col(correlation_graph_layout),
         dbc.Col(line_graph_layout),
+        dbc.Col(correlation_graph_layout),
     ]),
 
 ], fluid=True, className='container')

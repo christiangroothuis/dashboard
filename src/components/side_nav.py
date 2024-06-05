@@ -13,7 +13,7 @@ side_bar = html.Div(
         html.Div(
             html.H4('Clustering', style={'padding': '10px', 'border-bottom': '1px solid white'}),
         className='slide-in-content', id='slide-in-content'),
-    className='slide-in', id='slide-in',
+    className='slide-in', id='slide-in', style={'width': '400px'},
 )
 
 
@@ -24,9 +24,9 @@ side_bar = html.Div(
 )
 def update_sidebar_width(n_clicks, sidebar_class):
     if 'show' in sidebar_class:  # If the sidebar is expanded
-        return 3  # Adjust sidebar width
+        return 2  # Adjust sidebar width
     else:
-        return 2  # Default sidebar width
+        return 3  # Default sidebar width
 
 
 @dash.callback(
@@ -41,6 +41,8 @@ def toggle_slide_in(opened, current_class):
         return f"{current_class} show"  # Show the sidebar by adding the 'show' class
     else:
         return current_class.replace('show', '')
+
+
 """
 @dash.callback(
     Output("slide-in", "style"),  # what we wanted to change

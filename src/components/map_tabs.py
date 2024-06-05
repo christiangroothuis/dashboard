@@ -87,11 +87,14 @@ map_tabs_layout = [main_dropdowns(map_categories_dict, key) for key in map_categ
 choropleth_map_layout = dcc.Graph(id="choropleth-map")
 
 
+# =====================
+#      Callbacks
+# =====================
 # Define callback to update map based on dropdown selection
 @callback(
     [Output("choropleth-map", "figure"),
      Output('borough-dropdown', 'value')],
-    [Input(str(i), "n_clicks") for i in range(10)]
+    [Input(str(i), "n_clicks") for i in range(15)]
 )
 def update_map(*args):
     """
