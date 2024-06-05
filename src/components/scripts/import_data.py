@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 import numpy as np
-from pyproj import Proj
 
 # Internal imports
 from .pas_data import import_clean_PAS_data, restructure_PAS_data
@@ -9,13 +8,8 @@ from .geo_borough import import_geo_borough_data, project_convert
 
 
 # Variables
-# data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
-# inProj = Proj('epsg:27700')
-# outProj = Proj(proj='latlong', datum='WGS84')
-#
-data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'police-data-analysis2/data')
-inProj = Proj('epsg:27700')
-outProj = Proj(proj='latlong', datum='WGS84')
+data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
+
 # PAS import
 df_data = import_clean_PAS_data(data_directory)
 pas_categories = df_data['Measure'].unique()

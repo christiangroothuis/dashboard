@@ -1,11 +1,5 @@
-from dash import Dash, html, dcc, callback, Output, Input, dash_table
-import pandas as pd
-import plotly.express as px
 import os
-from pathlib import Path
-import datetime
 import geojson
-import numpy as np
 from pyproj import Proj, transform
 import json
 

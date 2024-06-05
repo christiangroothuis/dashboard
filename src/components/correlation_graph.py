@@ -1,5 +1,5 @@
 # Imports
-from dash import Dash, dcc, html, Input, Output, callback
+from dash import dcc, Input, Output, callback
 import pandas as pd
 import numpy as np
 import plotly.express as px
