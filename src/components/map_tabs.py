@@ -1,7 +1,8 @@
 import dash_bootstrap_components as dbc
-from dash import html, callback, Input, Output, callback_context, dcc
+from dash import html, callback, Input, Output, State, callback_context, dcc
 from .scripts.map_categories import map_categories_dict
 import plotly.express as px
+
 from .scripts.import_data import df_data, geo_data
 
 
@@ -139,10 +140,16 @@ def update_map(*args):
 
 @callback(
     Output('stored_BR_data', 'data'),
-    Input('choropleth-map', 'clickData')
+    Input('choropleth-map', 'clickData'),
+    State('stored_BR_data', 'data')  # Add State to get current data
 )
-def update_stored_borough(clickData):
+def update_stored_borough(clickData, stored_data):
+    if stored_data is None:  # Handle the case when there is no initial data
+        stored_data = []
+
     if clickData:
         borough = clickData['points'][0]['location']
-        return [borough]
-    return []
+        if borough not in stored_data:
+            stored_data.append(borough)
+
+    return stored_data

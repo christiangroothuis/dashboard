@@ -15,20 +15,6 @@ scatter_trend_data = {
     'ResponseTime': np.random.normal(30, 5, 50)
 }
 df_scatter_trend = pd.DataFrame(scatter_trend_data)
-@callback(
-    Output("correlation-graph", "figure"),
-    [Input(str(i), "n_clicks") for i in range(10)]
-)
-def update_correlation_graph(*args):
-    fig = px.scatter(df_scatter_trend,
-                     x='CrimeRate',
-                     y='ResponseTime',
-                     color='Borough',
-                     trendline='ols',
-                     title='Correlation Between Crime Rate and Police Response Time')
-    fig.update_layout()
-
-
 
 @callback(
     Output("correlation-graph", "figure"),

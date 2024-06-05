@@ -8,6 +8,7 @@ from components.side_nav import button, side_bar # getAppHeader # side_navbar, B
 from components.line_graph import line_graph_layout
 from components.h_bar_chart import h_barchart_layout
 from components.map_tabs import choropleth_map_layout
+from components.correlation_graph import correlation_graph_layout
 
 
 # ====================================
@@ -35,8 +36,7 @@ dash_layout = dbc.Container([
         ),
     ]),
     dbc.Row([
-        dbc.Col(dcc.Graph(id='correlation-graph', className='graph-container')),
-
+        dbc.Col(correlation_graph_layout),
         dbc.Col(line_graph_layout),
     ]),
 
