@@ -1,28 +1,26 @@
-from dash import Dash, html, dcc, callback, Output, Input, dash_table
 import pandas as pd
-import plotly.express as px
 import os
 from pathlib import Path
 import datetime
-import geojson
-import numpy as np
-from pyproj import Proj, transform
-import json
 
 data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
 
 
 def import_clean_PAS_data(data_directory):
-    # Import PAS data
-    df_data = pd.read_csv(os.path.join(data_directory, 'pas_data3.csv'), delimiter=";")
-    df_data = df_data.drop(columns='Survey', axis=1)  # Clean unnecessary column
+    # Construct the file path
+    file_path = os.path.join(data_directory, 'pas_data3.csv')
 
-    # Change column type of 'Date' to datetime, filter on just one date (for now)
+
+    df_data = pd.read_csv(os.path.join(data_directory, 'pas_data3.csv'), delimiter=";")
+    # Drop the 'Survey' column
+    df_data = df_data.drop(columns='Survey', axis=1)
+
+
+ # Change column type of 'Date' to datetime, filter on just one date (for now)
     df_data['Date'] = pd.to_datetime(df_data['Date'])
     df_data = df_data[~(df_data['Date'] == datetime.date(2014, 12, 31))]
     df_data['Proportion'] = df_data['Proportion'].str.replace(',', '.').astype(float)
     return df_data
-
 
 def restructure_PAS_data(df_data, category_types, boroughs):
     # Define a new dataframe, which has the measures as columns
@@ -47,4 +45,3 @@ def restructure_PAS_data(df_data, category_types, boroughs):
         df_data1[cat] = df_data1[cat].astype(float)
 
     return df_data1, boroughs
-
