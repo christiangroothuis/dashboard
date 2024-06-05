@@ -135,3 +135,13 @@ def update_map(*args):
     selected_borough = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else None
 
     return fig, selected_borough
+
+@callback(
+    Output('stored_BR_data', 'data'),
+    Input('choropleth-map', 'clickData')
+)
+def update_stored_borough(clickData):
+    if clickData:
+        borough = clickData['points'][0]['location']
+        return [borough]
+    return []

@@ -108,13 +108,19 @@ def toggle_tooltip(n_clicks, style):
     return style
 
 
-# Callback to update the graph based on dropdown selection
+
 @callback(
     Output('line-chart', 'figure'),
     [Input('response-dropdown', 'value'),
-     Input('borough-dropdown', 'value')]
+     Input('stored_BR_data', 'data')]
 )
 def update_graph(selected_response, selected_boroughs):
+    if selected_response is None:
+        return go.Figure()
+
+    if not selected_boroughs:
+        selected_boroughs = df['Borough'].unique()
+
     filtered_df = df[df['Q13'] == selected_response]
     count_by_month_borough = filtered_df.groupby(['MONTH', 'Borough']).size().reset_index(name='Count')
 
