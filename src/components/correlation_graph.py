@@ -33,7 +33,7 @@ def update_correlation_graph(selected_boroughs):
         y='ResponseTime',
         color='Borough',
         trendline='ols',
-        title='Correlation Between Crime Rate and Police Response Time'
+
     )
     # Update layout to set background to clear
     fig.update_layout(

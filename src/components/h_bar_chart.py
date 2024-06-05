@@ -28,7 +28,7 @@ def update_h_barchart(selected_boroughs):
         y='Borough',
         x=0,
         labels={'0': 'Count', 'Borough': 'Borough'},
-        title='Distribution of trust in neighbourhood per borough'
+
     )
     fig.update_layout(
         barmode='stack',
