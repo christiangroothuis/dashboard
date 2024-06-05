@@ -1,18 +1,13 @@
 # External imports
 import dash_bootstrap_components as dbc
+from dash import html , State
 
 # Internal imports
 from components.map_tabs import map_tabs_layout
 from components.side_nav import button, side_bar # getAppHeader # side_navbar, Btn1
 from components.line_graph import line_graph_layout
-from components.correlation_graph import correlation_graph_layout
 from components.h_bar_chart import h_barchart_layout
 from components.map_tabs import choropleth_map_layout
-<<<<<<< HEAD
-from dash import html
-=======
-from dash import html , State
->>>>>>> Fixdash_Leo
 
 
 # ====================================
@@ -30,28 +25,6 @@ dash_layout = dbc.Container([
         dbc.Row(dbc.Navbar([button, *map_tabs_layout], style={'margin-top': '-20px', 'padding': 0}), className="dbc-navbar",)
     ], className="mb-2"),
     dbc.Row([
-<<<<<<< HEAD
-        dbc.Col(side_bar, style={'width': '100px'}),
-        dbc.Col(choropleth_map_layout,  style={'width': '900px'}, width=4),
-        dbc.Col(h_barchart_layout),
-    ]),
-    dbc.Row([
-        dbc.Col(correlation_graph_layout),
-        dbc.Col(line_graph_layout),
-    ])
-], fluid=True, className='container')
-
-
-
-
-
-
-
-
-
-
-
-=======
         dbc.Col(side_bar, id='sidebar-column', width=3),
         dbc.Col(
             dbc.Row([
@@ -68,8 +41,3 @@ dash_layout = dbc.Container([
     ]),
 
 ], fluid=True, className='container')
-
-
->>>>>>> Fixdash_Leo
-
-

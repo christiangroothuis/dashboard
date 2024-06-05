@@ -1,9 +1,5 @@
 # Imports
-<<<<<<< HEAD
-from dash import Dash, dcc, html, Input, Output, callback
-=======
 from dash import dcc, Input, Output, callback
->>>>>>> Fixdash_Leo
 import pandas as pd
 import numpy as np
 import plotly.express as px
@@ -19,7 +15,6 @@ scatter_trend_data = {
     'ResponseTime': np.random.normal(30, 5, 50)
 }
 df_scatter_trend = pd.DataFrame(scatter_trend_data)
-<<<<<<< HEAD
 @callback(
     Output("correlation-graph", "figure"),
     [Input(str(i), "n_clicks") for i in range(10)]
@@ -33,7 +28,6 @@ def update_correlation_graph(*args):
                      title='Correlation Between Crime Rate and Police Response Time')
     fig.update_layout()
 
-=======
 
 
 @callback(
@@ -62,5 +56,4 @@ def update_correlation_graph(selected_boroughs):
         height=600  # Set a specific height for consistency
     )
     fig.update_layout()
->>>>>>> Fixdash_Leo
     return fig

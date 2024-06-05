@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import dash
-=======
->>>>>>> Fixdash_Leo
 from dash import dcc, html, Input, Output, State, callback
 import plotly.graph_objects as go
 import pandas as pd
@@ -10,18 +6,9 @@ from pathlib import Path
 
 # Load and preprocess the data
 columns_to_keep = ['MONTH', 'Borough', 'Q13']
-<<<<<<< HEAD
-#df = pd.read_csv(
-#    r'C:\Users\20212444\Desktop\TUe\year2 (DA)\Q4\Data Challenge 2\pas_data_ward_level\PAS_ward_level_FY_20_21.csv',
-#    usecols=columns_to_keep, low_memory=False)
-
-data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
-df = pd.read_csv(os.path.join(data_directory, 'pas_data_ward_level/PAS_ward_level_FY_20_21.csv'))
-=======
 
 data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
 df = pd.read_csv(os.path.join(data_directory,'pas_data_ward_level/PAS_ward_level_FY_20_21.csv'))
->>>>>>> Fixdash_Leo
 
 # Create a list of unique responses, filtering out any null values
 responses = df['Q13'].dropna().unique()
@@ -117,15 +104,6 @@ def toggle_tooltip(n_clicks, style):
     return style
 
 
-<<<<<<< HEAD
-# Callback to update the graph based on dropdown selection
-@callback(
-    Output('line-chart', 'figure'),
-    Input('response-dropdown', 'value'),
-    Input('borough-dropdown', 'value')
-)
-def update_graph(selected_response, selected_boroughs):
-=======
 
 @callback(
     Output('line-chart', 'figure'),
@@ -139,7 +117,6 @@ def update_graph(selected_response, selected_boroughs):
     if not selected_boroughs:
         selected_boroughs = df['Borough'].unique()
 
->>>>>>> Fixdash_Leo
     filtered_df = df[df['Q13'] == selected_response]
     count_by_month_borough = filtered_df.groupby(['MONTH', 'Borough']).size().reset_index(name='Count')
 
@@ -157,8 +134,4 @@ def update_graph(selected_response, selected_boroughs):
         template='plotly_white'
     )
 
-<<<<<<< HEAD
     return fig
-=======
-    return fig
->>>>>>> Fixdash_Leo

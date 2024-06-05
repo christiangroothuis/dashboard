@@ -88,26 +88,17 @@ choropleth_map_layout = dcc.Graph(id="choropleth-map")
 
 # Define callback to update map based on dropdown selection
 @callback(
-<<<<<<< HEAD
-    Output("choropleth-map", "figure"),
-=======
     [Output("choropleth-map", "figure"),
      Output('borough-dropdown', 'value')],
->>>>>>> Fixdash_Leo
     [Input(str(i), "n_clicks") for i in range(10)]
 )
 def update_map(*args):
     """
-<<<<<<< HEAD
     Updates the choropleth plot based on the nested dropdown.
     :param args: the IDs of all selectable categories in the nested drop-downs.
     :return: choropleth plot.
-=======
-    Updates the choropleth plot based on the nested dropdown and updates the borough dropdown.
-    :param args: the IDs of all selectable categories in the nested drop-downs.
-    :return: choropleth plot and updated borough dropdown value.
->>>>>>> Fixdash_Leo
     """
+
     ctx = callback_context
     button_id = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else None
 
@@ -141,9 +132,6 @@ def update_map(*args):
 
     fig.update_coloraxes(colorbar_len=0.5)
 
-<<<<<<< HEAD
-    return fig
-=======
     # Get the selected borough from the map click event
     selected_borough = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else None
 
@@ -158,4 +146,3 @@ def update_stored_borough(clickData):
         borough = clickData['points'][0]['location']
         return [borough]
     return []
->>>>>>> Fixdash_Leo
