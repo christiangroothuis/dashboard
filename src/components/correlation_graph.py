@@ -19,14 +19,14 @@ df_scatter_trend = pd.DataFrame(scatter_trend_data)
 
 @callback(
     Output("correlation-graph", "figure"),
-    Input('stored_BR_data', 'data'),
+    Input('selected_borough', 'data'),
     prevent_initial_call=True
 )
-def update_correlation_graph(selected_boroughs):
-    if not selected_boroughs:
+def update_correlation_graph(selected_borough):
+    if not selected_borough:
         df_filtered = df_scatter_trend
     else:
-        df_filtered = df_scatter_trend[df_scatter_trend['Borough'].isin(selected_boroughs)]
+        df_filtered = df_scatter_trend[df_scatter_trend['Borough'].isin(selected_borough)]
 
     fig = px.scatter(
         df_filtered,

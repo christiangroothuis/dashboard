@@ -112,13 +112,13 @@ def toggle_tooltip(n_clicks, style):
 @callback(
     Output('line-chart', 'figure'),
     [Input('response-dropdown', 'value'),
-     Input('stored_BR_data', 'data')]
+     Input('selected_borough', 'data')]
 )
-def update_graph(selected_response, selected_boroughs):
+def update_graph(selected_response, selected_borough):
     if selected_response is None:
         return go.Figure()
 
-    if not selected_boroughs:
+    if not selected_borough:
         selected_boroughs = df['Borough'].unique()
 
     filtered_df = df[df['Q13'] == selected_response]
@@ -126,7 +126,7 @@ def update_graph(selected_response, selected_boroughs):
 
     fig = go.Figure()
 
-    for borough in selected_boroughs:
+    for borough in selected_borough:
         df_borough = count_by_month_borough[count_by_month_borough['Borough'] == borough]
         fig.add_trace(go.Scatter(x=df_borough['MONTH'], y=df_borough['Count'], mode='lines+markers', name=borough))
 

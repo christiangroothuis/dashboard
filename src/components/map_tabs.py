@@ -136,12 +136,17 @@ def update_map(*args):
 
     return fig, selected_borough
 
+selected_boroughs = []
+
 @callback(
-    Output('stored_BR_data', 'data'),
+    Output('selected_borough', 'data'),
     Input('choropleth-map', 'clickData')
 )
 def update_stored_borough(clickData):
+    global selected_boroughs
     if clickData:
         borough = clickData['points'][0]['location']
-        return [borough]
+        if borough not in selected_boroughs:
+            selected_boroughs.append(borough)
+        return selected_boroughs
     return []
