@@ -1,10 +1,7 @@
 import dash
 from dash import Output, Input, State, html
-import dash_mantine_components as dmc
-from jupyter_dash import JupyterDash
 from dash_iconify import DashIconify
 import dash_bootstrap_components as dbc
-import dash_core_components as dcc
 
 button = dbc.Button(
     children=[DashIconify(icon="ci:hamburger-lg", width=24, height=24, color="#c2c7d0")],

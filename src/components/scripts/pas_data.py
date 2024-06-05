@@ -1,13 +1,7 @@
-from dash import Dash, html, dcc, callback, Output, Input, dash_table
 import pandas as pd
-import plotly.express as px
 import os
 from pathlib import Path
 import datetime
-import geojson
-import numpy as np
-from pyproj import Proj, transform
-import json
 
 data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
 
@@ -51,6 +45,3 @@ def restructure_PAS_data(df_data, category_types, boroughs):
         df_data1[cat] = df_data1[cat].astype(float)
 
     return df_data1, boroughs
-
-# df_data1 = pd.DataFrame(columns=['Date', 'Borough', *category_types])
-# print(df_data1)
