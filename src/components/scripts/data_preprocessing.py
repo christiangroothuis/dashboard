@@ -10,7 +10,7 @@ from pas_data import import_clean_PAS_data, restructure_PAS_data
 from geo_borough import import_geo_borough_data, project_convert
 
 # Variables
-data_directory = os.path.join(Path(os.getcwd()).parent.parent.parent.parent, 'data')
+data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
 
 # ==================
 # PAS data
@@ -18,7 +18,6 @@ data_directory = os.path.join(Path(os.getcwd()).parent.parent.parent.parent, 'da
 df_pas_original = import_clean_PAS_data(data_directory)  # All data check
 pas_categories = df_pas_original['Measure'].unique()
 pas_boroughs = df_pas_original['Borough'].unique()
-df_pas_original, pas_boroughs = restructure_PAS_data(df_pas_original, pas_categories, pas_boroughs)
 
 # ==================
 # Geo data
@@ -28,6 +27,9 @@ if not os.path.isfile(os.path.join(data_directory, 'geojson/London_Boroughs_extr
     geo_data, _ = import_geo_borough_data(data_directory, 'geojson/London_Boroughs.geojson')
     project_convert(geo_data, data_directory, source='epsg:27700', target='latlong', datum='WGS84')
 geo_data, geo_boroughs = import_geo_borough_data(data_directory, 'geojson/London_Boroughs_extracted.geojson')
+
+df_pas_original, pas_boroughs = restructure_PAS_data(df_pas_original, pas_categories, geo_boroughs)
+
 
 # Check if the borough names are identical at last
 pas_boroughs.sort()
@@ -158,16 +160,13 @@ for i, borough1 in enumerate(all_boroughs):
             pass
         else:
             print("NOT identical Borough names!")
+            print(i, len(borough1), j, len(borough2))
 
 
 # Fill all City of london to Nan in df_pas_original:
 mask = df_pas_original['Borough'] == 'City of London'
 columns_to_keep = ['Year', 'Borough']
 df_pas_original.loc[mask, df_pas_original.columns.difference(columns_to_keep)] = np.nan
-
-print(df_pas_original)
-print('')
-print(df_pas_original[df_pas_original['Borough'] == 'City of London'])
 
 # Dataframes for export
 geo_data = geo_data.copy()
@@ -178,3 +177,14 @@ df_stop_search = all_dfc_w_London_city[2]
 df_street = all_dfc_w_London_city[3]
 df_economic = all_dfc_w_London_city[4]
 df_ethnicity = all_dfc_w_London_city[5]
+
+
+df_pas_original.to_csv(os.path.join(data_directory, 'data_processed/pas_original.csv'))
+df_pas_granular.to_csv(os.path.join(data_directory, 'data_processed/pas_granular.csv'))
+
+df_outcomes.to_csv(os.path.join(data_directory, 'data_processed/outcomes.csv'))
+df_stop_search.to_csv(os.path.join(data_directory, 'data_processed/stop_search.csv'))
+df_street.to_csv(os.path.join(data_directory, 'data_processed/street.csv'))
+
+df_economic.to_csv(os.path.join(data_directory, 'data_processed/economic.csv'))
+df_ethnicity.to_csv(os.path.join(data_directory, 'data_processed/ethnicity.csv'))

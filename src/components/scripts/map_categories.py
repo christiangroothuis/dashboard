@@ -5,22 +5,22 @@ from pathlib import Path
 # data import
 data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
 
-df_outcomes = pd.read_csv(os.path.join(data_directory, 'data_dc2/crime_data/outcomes_final.csv'))
-df_ss = pd.read_csv(os.path.join(data_directory, 'data_dc2/crime_data/ss_final.csv'))
-df_street = pd.read_csv(os.path.join(data_directory, 'data_dc2/crime_data/street_final.csv'))
+df_outcomes = pd.read_csv(os.path.join(data_directory, 'outcomes.csv'))
+df_ss = pd.read_csv(os.path.join(data_directory, 'stop_search.csv'))
+df_street = pd.read_csv(os.path.join(data_directory, 'street.csv'))
 
 # Get relevant attributes
-outcome_types = df_outcomes['outcome_type'].unique()
+outcome_types = df_outcomes['Outcome Type'].unique()
 
-ss_gender = ['Male:Female']
-ss_age_range = df_ss['age_range'].unique()
-ss_officer_def_ethnicity = df_ss['officer_def_ethinicty'].unique()
-ss_legislation = df_ss['legislation'].unique()
-ss_search_object = df_ss['search_object'].unique()
-ss_outcome = df_ss['outcome'].unique()
+# ss_gender = ['Male:Female']
+ss_age_range = df_ss['Age Range'].unique()
+ss_officer_def_ethnicity = df_ss['Officer Def Ethinicty'].unique()
+ss_legislation = df_ss['Legislation'].unique()
+ss_search_object = df_ss['Search Object'].unique()
+ss_outcome = df_ss['Outcome'].unique()
 
-street_crime_type = df_street['crime_type'].unique()
-street_last_out_cat = df_street['last_out_cat'].unique()
+street_crime_type = df_street['Crime Type'].unique()
+street_last_out_cat = df_street['Last Out Cat'].unique()
 
 
 # Define list of tuples
@@ -57,36 +57,38 @@ map_categories_dict = {
         'Trust': [('5', "Listen to concerns"),
                   ('6', "Relied on to be there"),
                   ('7', "Treat everyone fairly")],
-        'PAS-Granular': [(str(111), 'Test1')],
+        'PAS-Granular': [(str(114), 'Test1')],
         'Other': [('8', "Contact ward officer"),
                   ('9', "Trust MPS")],
     },
     'Economic':{
         'Demographic': [
-            (str(112), 'Number of Individuals'),
+            (str(115), 'White'),
+            (str(116), 'Asian'),
+            (str(117), 'Black'),
+            (str(118), 'Mixed Other'),
+            (str(119), 'Total'),
         ],
         'Industry types': [
-            (str(113), 'Manufacturing'),
-            (str(114), 'Constructing'),
-            (str(115), 'Hotels and Restaurants'),
-            (str(116), 'Transport and Communication'),
-            (str(117), 'Banking and Finance'),
-            (str(118), 'Public Administration, Education and Health'),
-            (str(119), 'Other Services'),
+            (str(120), 'Manufacturing (%)'),
+            (str(121), 'Constructing (%)'),
+            (str(122), 'Hotels and Restaurants (%)'),
+            (str(123), 'Transport and Communication (%)'),
+            (str(124), 'Banking and Finance (%)'),
+            (str(125), 'Public Administration, Education and Health (%)'),
+            (str(126), 'Other Services (%)'),
         ],
         'Employment': [
-            (str(120), 'Job Density'),
-            (str(121), 'Employed Ratio'),
-            (str(122), 'Self-Employed Ratio'),
-            (str(123), 'Full-Time Ratio'),
-            (str(124), 'Part-Time Ratio'),
-            (str(125), 'Active:Inactive'),
-            (str(126), 'Active:Inactive Male'),
-            (str(127), 'Active:Inactive Female'),
+            (str(127), 'Job Density (%)'),
+            (str(128), 'Employed (%)'),
+            (str(129), 'Self-Employed (%)'),
+            (str(130), 'Full-Time:Part-time'),
+            (str(131), 'Active:Inactive Male'),
+            (str(132), 'Active:Inactive Female'),
         ]
     },
     'Stop&Search': {
-                'Male:Female': [(str(128), None)],
+                # 'Male:Female': [(str(140), None)],
                 'Age Range': ss_age_range_tuple_list,
                 "Officer Defined Ethnicity": ss_officer_def_ethnicity_tuple_list,
                 "Legislation": ss_legislation_tuple_list,

@@ -41,21 +41,3 @@ def toggle_slide_in(opened, current_class):
         return f"{current_class} show"  # Show the sidebar by adding the 'show' class
     else:
         return current_class.replace('show', '')
-
-
-"""
-@dash.callback(
-    Output("slide-in", "style"),  # what we wanted to change
-    Input("sidebar-button", "n_clicks"),  # width will change when btn is triggered
-    State('slide-in', 'style'),  # store inital width
-    prevent_initial_call=True,
-)
-def sidebar(opened, style):
-    if opened:
-        if style['display'] == 'none':  # if initial width is 300 then return 70
-            style['display'] = 'block'
-        else:
-            style['display'] = 'none'
-    return style
-
-"""
