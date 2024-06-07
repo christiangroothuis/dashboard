@@ -139,9 +139,9 @@ def update_map(*args):
     return fig, selected_borough
 
 @callback(
-    Output('stored_BR_data', 'data'),
+    Output('selected_borough', 'data'),
     Input('choropleth-map', 'clickData'),
-    State('stored_BR_data', 'data')  # Add State to get current data
+    State('selected_borough', 'data')  # Add State to get current data
 )
 def update_stored_borough(clickData, stored_data):
     if stored_data is None:  # Handle the case when there is no initial data
@@ -149,7 +149,10 @@ def update_stored_borough(clickData, stored_data):
 
     if clickData:
         borough = clickData['points'][0]['location']
-        if borough not in stored_data:
-            stored_data.append(borough)
+        if borough in stored_data:
+            stored_data.remove(borough)  # Remove the borough if already selected
+        else:
+            stored_data.append(borough)  # Add the borough if not selected
 
     return stored_data
+

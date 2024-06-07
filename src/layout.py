@@ -19,7 +19,8 @@ from dash import dcc
 
 dash_layout = dbc.Container([
     html.Link(href='/assets/styles.css', rel='stylesheet'),
-    dcc.Store(id='stored_BR_data', data=[]),  # Store to hold selected boroughs
+    dcc.Store(id='selected_borough', data=[]),
+    dcc.Store(id='stored_data', data=[]),# Store to hold selected boroughs
     dbc.Row([
         dbc.Row(html.H1('Powered by the TU/e', className='top-panel')),
         dbc.Row(html.H1('𝓟oL𝛔cal', className='polocal-header', style={'margin-top': '24px'})),
