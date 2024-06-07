@@ -8,10 +8,10 @@ data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
 
 def import_clean_PAS_data(data_directory):
     # Construct the file path
-    file_path = os.path.join(data_directory, 'pas_data3.csv')
+    file_path = os.path.join(data_directory, 'pas_data/pas_original.csv')
 
 
-    df_data = pd.read_csv(os.path.join(data_directory, 'pas_data3.csv'), delimiter=";")
+    df_data = pd.read_csv(os.path.join(data_directory, 'pas_data/pas_original.csv'), delimiter=";")
     # Drop the 'Survey' column
     df_data = df_data.drop(columns='Survey', axis=1)
 
@@ -24,9 +24,11 @@ def import_clean_PAS_data(data_directory):
 
 def restructure_PAS_data(df_data, category_types, boroughs):
     # Define a new dataframe, which has the measures as columns
+
     df_data1 = pd.DataFrame(columns=['Date', 'Borough', *category_types])
-    df_data1['Borough'] = boroughs
-    df_data1['Date'] = datetime.date(2014, 12, 31)
+    df_data1['Date'] = df_data['Date']
+    df_data1['Borough'] = df_data['Borough']
+
     for i in range(len(df_data)):
         measure = df_data.loc[i, 'Measure']
         value = df_data.loc[i, 'Proportion']

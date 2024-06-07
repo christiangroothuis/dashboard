@@ -94,7 +94,7 @@ choropleth_map_layout = dcc.Graph(id="choropleth-map")
 @callback(
     [Output("choropleth-map", "figure"),
      Output('borough-dropdown', 'value')],
-    [Input(str(i), "n_clicks") for i in range(15)]
+    [Input(str(i), "n_clicks") for i in range(10)]
 )
 def update_map(*args):
     """

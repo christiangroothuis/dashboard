@@ -10,6 +10,7 @@ from components.h_bar_chart import h_barchart_layout
 from components.map_tabs import choropleth_map_layout
 from components.correlation_graph import correlation_graph_layout
 
+from components.scripts.
 
 # ====================================
 # Create the layout
