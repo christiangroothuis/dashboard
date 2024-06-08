@@ -10,7 +10,8 @@ from pas_data import import_clean_PAS_data, restructure_PAS_data
 from geo_borough import import_geo_borough_data, project_convert
 
 # Variables
-data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
+base_dir = os.path.join(Path(os.getcwd()).parent.parent.parent.parent)
+data_directory = os.path.join(Path(os.getcwd()).parent.parent.parent.parent, 'data_raw')
 
 # ==================
 # PAS data
@@ -29,7 +30,6 @@ if not os.path.isfile(os.path.join(data_directory, 'geojson/London_Boroughs_extr
 geo_data, geo_boroughs = import_geo_borough_data(data_directory, 'geojson/London_Boroughs_extracted.geojson')
 
 df_pas_original, pas_boroughs = restructure_PAS_data(df_pas_original, pas_categories, geo_boroughs)
-
 
 # Check if the borough names are identical at last
 pas_boroughs.sort()
@@ -73,7 +73,8 @@ df_outcomes = transform_string(load_data(os.path.join(data_directory, 'crime_dat
 df_stop_search = transform_string(load_data(os.path.join(data_directory, 'crime_data/stop_search.csv')))
 df_street = transform_string(load_data(os.path.join(data_directory, 'crime_data/street.csv')))
 df_economic_raw = load_data(os.path.join(data_directory, 'economic_data/joined-economic.csv'))
-df_ethnicity = transform_string(pd.read_csv(os.path.join(data_directory, 'ethnicity_data/ethnicity.csv'), delimiter=';'))
+df_ethnicity = transform_string(
+    pd.read_csv(os.path.join(data_directory, 'ethnicity_data/ethnicity.csv'), delimiter=';'))
 
 df_economic_raw.replace('!', np.nan, inplace=True)
 
@@ -97,7 +98,6 @@ for column in extracted_columns_econ_percentage:
         print(column, df_economic_num[column].dtype)
     df_economic_num[column] = df_economic_num[column] / df_economic_num['number_of_individuals']
 
-
 df_economic_num['Full-Time:Part-time'] = df_economic_num['total_full_time'] / df_economic_num['total_part_time']
 df_economic_num['Active:Inactive Male'] = df_economic_num['economically_active_male'] / df_economic_num[
     'Economically Inactive_male']
@@ -110,27 +110,24 @@ renamed_columns_econ = ['Borough', 'Year', 'Manufacturing (%)', 'Constructing (%
                         'Job Density (%)', 'Employed (%)', 'Self-Employed (%)', 'Full-Time:Part-time',
                         'Active:Inactive Male', 'Active:Inactive Female']
 
-
 column_mapping = {tup[0]: tup[1] for tup in zip(extracted_columns_econ, renamed_columns_econ)}
 
 df_economic = df_economic_num[extracted_columns_econ]
 df_economic.rename(columns=column_mapping, inplace=True)
-
 
 # Include City of London everywhere, set all values to Nan
 
 # Convert 'Date' column to datetime format
 df_pas_original['Date'] = pd.to_datetime(df_pas_original['Date']).dt.year.astype(int)
 df_pas_original.rename(columns={'Date': 'Year'}, inplace=True)
+df_pas_original = df_pas_original.groupby(['Borough', 'Year']).mean().reset_index()
 
 all_dfs = [df_pas_granular, df_outcomes, df_stop_search, df_street, df_economic, df_ethnicity]
-
 
 all_dfc_w_London_city = []
 for df in all_dfs:
 
     years = df['Year'].unique()
-    # data_to_append = []
 
     for year in years:
         row_data = {'Year': year, 'Borough': 'City of London'}
@@ -141,7 +138,6 @@ for df in all_dfs:
         df = pd.concat([df, pd.DataFrame([row_data])], ignore_index=True, axis=0)
     all_dfc_w_London_city.append(df)
 
-
 # Check if the borough names are identical at last
 pas_boroughs = sorted(df_pas_original['Borough'].unique())
 pas_granular_boroughs = sorted(all_dfc_w_London_city[0]['Borough'].unique())
@@ -150,7 +146,8 @@ ss_boroughs = sorted(all_dfc_w_London_city[2]['Borough'].unique())
 street_boroughs = sorted(all_dfc_w_London_city[3]['Borough'].unique())
 economic_boroughs = sorted(all_dfc_w_London_city[4]['Borough'].unique())
 ethnicity_boroughs = sorted(all_dfc_w_London_city[5]['Borough'].unique())
-all_boroughs = [geo_boroughs, pas_boroughs, pas_granular_boroughs, outcomes_boroughs, ss_boroughs, street_boroughs, economic_boroughs,
+all_boroughs = [geo_boroughs, pas_boroughs, pas_granular_boroughs, outcomes_boroughs, ss_boroughs, street_boroughs,
+                economic_boroughs,
                 ethnicity_boroughs]
 
 for i, borough1 in enumerate(all_boroughs):
@@ -162,12 +159,6 @@ for i, borough1 in enumerate(all_boroughs):
             print("NOT identical Borough names!")
             print(i, len(borough1), j, len(borough2))
 
-
-# Fill all City of london to Nan in df_pas_original:
-mask = df_pas_original['Borough'] == 'City of London'
-columns_to_keep = ['Year', 'Borough']
-df_pas_original.loc[mask, df_pas_original.columns.difference(columns_to_keep)] = np.nan
-
 # Dataframes for export
 geo_data = geo_data.copy()
 df_pas_original = df_pas_original.copy()
@@ -177,14 +168,51 @@ df_stop_search = all_dfc_w_London_city[2]
 df_street = all_dfc_w_London_city[3]
 df_economic = all_dfc_w_London_city[4]
 df_ethnicity = all_dfc_w_London_city[5]
+df_ethnicity['Black'] = pd.to_numeric(df_ethnicity['Black'], errors='coerce')
 
 
-df_pas_original.to_csv(os.path.join(data_directory, 'data_processed/pas_original.csv'))
-df_pas_granular.to_csv(os.path.join(data_directory, 'data_processed/pas_granular.csv'))
+# Fill all City of london to Nan in df_pas_original, ethnicity and economic:
+def fill_nan(dataframe):
+    mask = dataframe['Borough'] == 'City of London'
+    columns_to_keep = ['Year', 'Borough']
+    dataframe.loc[mask, dataframe.columns.difference(columns_to_keep)] = np.nan
+    return dataframe
 
-df_outcomes.to_csv(os.path.join(data_directory, 'data_processed/outcomes.csv'))
-df_stop_search.to_csv(os.path.join(data_directory, 'data_processed/stop_search.csv'))
-df_street.to_csv(os.path.join(data_directory, 'data_processed/street.csv'))
 
-df_economic.to_csv(os.path.join(data_directory, 'data_processed/economic.csv'))
-df_ethnicity.to_csv(os.path.join(data_directory, 'data_processed/ethnicity.csv'))
+df_pas_original = fill_nan(df_pas_original)
+df_economic = fill_nan(df_economic)
+df_ethnicity = fill_nan(df_ethnicity)
+
+
+def reformat_crime_data(dataframe, columns_name):
+    df = pd.DataFrame(dataframe.copy().groupby(['Borough', 'Year', columns_name]).size().reset_index(name='Count'))
+    df = df.pivot_table(index=['Borough', 'Year'], columns=columns_name, values='Count', fill_value=0).reset_index()
+    return df
+
+
+df_outcomes = reformat_crime_data(df_outcomes, 'Outcome Type')
+df_age_rage = reformat_crime_data(df_stop_search, 'Age Range')
+df_officer_def_ethnicity = reformat_crime_data(df_stop_search, 'Officer Def Ethinicty')
+df_legislation = reformat_crime_data(df_stop_search, 'Legislation')
+df_search_object = reformat_crime_data(df_stop_search, 'Search Object')
+df_ss_outcome = reformat_crime_data(df_stop_search, 'Outcome')
+df_crime_type = reformat_crime_data(df_street, 'Crime Type')
+df_last_outcome = reformat_crime_data(df_street, 'Last Out Cat')
+
+# =================
+# Download as CSV #
+# =================
+df_pas_original.to_csv(os.path.join(base_dir, 'data/pas_original.csv'))
+df_pas_granular.to_csv(os.path.join(base_dir, 'data/pas_granular.csv'))
+
+df_outcomes.to_csv(os.path.join(base_dir, 'data/outcomes.csv'))
+df_age_rage.to_csv(os.path.join(base_dir, 'data/age_range.csv'))
+df_officer_def_ethnicity.to_csv(os.path.join(base_dir, 'data/officer_def_ethnicity.csv'))
+df_legislation.to_csv(os.path.join(base_dir, 'data/legislation.csv'))
+df_search_object.to_csv(os.path.join(base_dir, 'data/search_object.csv'))
+df_ss_outcome.to_csv(os.path.join(base_dir, 'data/ss_outcome.csv'))
+df_crime_type.to_csv(os.path.join(base_dir, 'data/crime_type.csv'))
+df_last_outcome.to_csv(os.path.join(base_dir, 'data/ss_last_outcome.csv'))
+
+df_economic.to_csv(os.path.join(base_dir, 'data/economic.csv'))
+df_ethnicity.to_csv(os.path.join(base_dir, 'data/ethnicity.csv'))
