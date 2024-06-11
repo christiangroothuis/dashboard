@@ -76,6 +76,11 @@
     z-index: 1;
 }
 
+.menu-level1, .menu-level2 {
+    padding-bottom: 5px;
+}
+
+
 /*Default display state*/
 .menu-level0-title {
     display: block;
@@ -94,6 +99,7 @@
     position: absolute!important;
     cursor: pointer;
 }
+
 
 /*Change color when hover over text*/
 .menu-level0-title:hover, .menu-level1-title:hover, .menu-level2:hover {
@@ -123,10 +129,10 @@
     position: absolute;
     overflow: hidden; /* to prevent scrollbar appearing */
     left: 0;
-    width: 400px;
     height: 700px;
     text-align: center;
     color: white;
+    transition: transform .5s ease;
 }
 .slide-in-content {
   padding: 5px 20px;
@@ -138,11 +144,14 @@
   transform: translateX(-100%);
   -webkit-transform: translateX(-100%);
 }
-.slide-in.show .slide-in-content {
+.slide-in.show, .slide-in.show .slide-in-content {
   transform: translateX(0);
   -webkit-transform: translateX(0);
 }
-
+.slide-in{
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+}
 
 .graph-container {
     height: 600px;  /* Ensure the container has the same height */

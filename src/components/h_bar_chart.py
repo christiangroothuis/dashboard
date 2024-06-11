@@ -1,16 +1,18 @@
 # Imports
 from dash import dcc, Input, Output, callback
-import pandas as pd
 import plotly.express as px
+import pandas as pd
 import os
 from pathlib import Path
 
+# from .scripts.import_data import df_pas_granular as df_granular_pas
+
+data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
+df_granular_pas = pd.read_csv(os.path.join(data_directory, 'pas_granular.csv'))
 
 h_barchart_layout = dcc.Graph(id="h_barchart")
 
-data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
-df_granular_pas = pd.read_csv(os.path.join(data_directory, 'pas_data_ward_level/PAS_ward_level_FY_20_21.csv'))
-df_grouped = df_granular_pas.groupby(['Borough', 'Q1']).size().unstack().fillna(0)
+df_grouped = df_granular_pas.groupby(['Borough', 'Ss Agree Neither Agree Nor Disagree']).size().unstack().fillna(0)
 
 @callback(
     Output("h_barchart", "figure"),
