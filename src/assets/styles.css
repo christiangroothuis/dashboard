@@ -16,7 +16,7 @@
     display: flex;
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
-    color: #0032A0;
+    color: #3D4A89;
     font-size: 4rem;
     margin-top: 40px; /* Adjust the value as needed */
 }
@@ -103,7 +103,7 @@
 
 /*Change color when hover over text*/
 .menu-level0-title:hover, .menu-level1-title:hover, .menu-level2:hover {
-    color: #0032A0;
+    color: #3D4A89;
     font-weight: bold;
 }
 
@@ -136,7 +136,7 @@
 }
 .slide-in-content {
   padding: 5px 20px;
-  background: #0032A0;
+  background: #3D4A89;
     height: 700px;
   transition: transform .5s ease; /* our nice transition */
 }
