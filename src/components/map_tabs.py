@@ -18,7 +18,8 @@ df_pas_granular = pd.read_csv(os.path.join(data_directory, 'pas_granular.csv'))
 
 df_outcomes = pd.read_csv(os.path.join(data_directory, 'outcomes_pivot.csv')).drop(columns='Unnamed: 0')
 df_age_rage = pd.read_csv(os.path.join(data_directory, 'age_range.csv')).drop(columns='Unnamed: 0')
-df_officer_def_ethnicity = pd.read_csv(os.path.join(data_directory, 'officer_def_ethnicity.csv')).drop(columns='Unnamed: 0')
+df_officer_def_ethnicity = pd.read_csv(os.path.join(data_directory, 'officer_def_ethnicity.csv')).drop(
+    columns='Unnamed: 0')
 df_legislation = pd.read_csv(os.path.join(data_directory, 'legislation.csv')).drop(columns='Unnamed: 0')
 df_search_object = pd.read_csv(os.path.join(data_directory, 'search_object.csv')).drop(columns='Unnamed: 0')
 df_ss_outcome = pd.read_csv(os.path.join(data_directory, 'ss_outcome.csv')).drop(columns='Unnamed: 0')
@@ -27,6 +28,7 @@ df_last_outcome = pd.read_csv(os.path.join(data_directory, 'ss_last_outcome.csv'
 
 df_economic = pd.read_csv(os.path.join(data_directory, 'economic.csv'))
 df_ethnicity = pd.read_csv(os.path.join(data_directory, 'ethnicity.csv'))
+
 
 def create_nested_dropdown(map_categories_dict: dict, key_path: list):
     """
@@ -112,6 +114,7 @@ button_to_borough = {str(i): borough for i, borough in enumerate(df_pas_original
 attribute_click_counts = {str(i): 0 for i in range(0, 165)}
 previously_clicked_attribute = 0
 
+
 # =====================
 #      Callbacks
 # =====================
@@ -119,7 +122,32 @@ previously_clicked_attribute = 0
 @callback(
     Output("choropleth-map", "figure"),
     [*[Input(str(i), "n_clicks") for i in range(0, 124)],
+
+     # Year slider
      Input('range-slider', 'value')],
+
+    # PAS
+    Input('PAS', 'n_clicks'),
+    Input('Confidence', 'n_clicks'), Input('Trust', 'n_clicks'),
+    Input('PAS-Granular', 'n_clicks'), Input('Other', 'n_clicks'),
+
+    # Economic
+    Input('Economic', 'n_clicks'),
+    Input('Demographic', 'n_clicks'), Input('Industry types', 'n_clicks'),
+    Input('Employment', 'n_clicks'),
+
+    # Stop and search
+    Input('Stop&Search', 'n_clicks'),
+    Input('Age Range', 'n_clicks'), Input('Officer Defined Ethnicity', 'n_clicks'),
+    Input('Legislation', 'n_clicks'), Input('Search Object', 'n_clicks'),
+    Input('Stop and Search Outcome', 'n_clicks'),
+
+    # Street
+    Input('StreetCrime', 'n_clicks'),
+    Input('Crime Type Street', 'n_clicks'), Input('Last Outcome', 'n_clicks'),
+
+    # Outcomes
+    Input('CrimeOutcomes', 'n_clicks'),
 )
 def update_map(*args):
     """
@@ -136,6 +164,10 @@ def update_map(*args):
 
     # Extract the selected time interval
     year_range = args[124]
+    print(year_range)
+
+    aggregated_attribute_clicks = args[125:]
+    print(aggregated_attribute_clicks)
 
     # Determine which attribute was clicked most recently
     most_recently_clicked = None
@@ -229,7 +261,7 @@ def update_map(*args):
         sub_attribute = '"Good Job" local'  # Default to Trust_score if no button is clicked
 
     start_year, end_year = year_range
-    df_data = df_data[df_data['Year'].between(start_year-1, end_year)]
+    df_data = df_data[df_data['Year'].between(start_year - 1, end_year)]
     df_data = df_data.drop(columns='Year').groupby('Borough').sum().reset_index()
 
     # Define the choropleth plot
@@ -245,6 +277,7 @@ def update_map(*args):
     fig.update_coloraxes(colorbar_len=0.5)
 
     return fig
+
 
 @callback(
     Output('stored_BR_data', 'data'),
