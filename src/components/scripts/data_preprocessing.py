@@ -190,14 +190,17 @@ def reformat_crime_data(dataframe, columns_name):
     return df
 
 
-df_outcomes = reformat_crime_data(df_outcomes, 'Outcome Type')
-df_age_rage = reformat_crime_data(df_stop_search, 'Age Range')
-df_officer_def_ethnicity = reformat_crime_data(df_stop_search, 'Officer Def Ethinicty')
-df_legislation = reformat_crime_data(df_stop_search, 'Legislation')
-df_search_object = reformat_crime_data(df_stop_search, 'Search Object')
-df_ss_outcome = reformat_crime_data(df_stop_search, 'Outcome')
-df_crime_type = reformat_crime_data(df_street, 'Crime Type')
-df_last_outcome = reformat_crime_data(df_street, 'Last Out Cat')
+df_outcomes = reformat_crime_data(df_outcomes, 'Outcome Type').drop(columns='Unnamed: 0')
+df_age_rage = reformat_crime_data(df_stop_search, 'Age Range').drop(columns='Unnamed: 0')
+df_officer_def_ethnicity = reformat_crime_data(df_stop_search, 'Officer Def Ethinicty').drop(columns='Unnamed: 0')
+df_legislation = reformat_crime_data(df_stop_search, 'Legislation').drop(columns='Unnamed: 0')
+df_search_object = reformat_crime_data(df_stop_search, 'Search Object').drop(columns='Unnamed: 0')
+df_ss_outcome = reformat_crime_data(df_stop_search, 'Outcome').drop(columns='Unnamed: 0')
+df_crime_type = reformat_crime_data(df_street, 'Crime Type').drop(columns='Unnamed: 0')
+df_last_outcome = reformat_crime_data(df_street, 'Last Out Cat').drop(columns='Unnamed: 0')
+
+
+
 
 # =================
 # Download as CSV #
