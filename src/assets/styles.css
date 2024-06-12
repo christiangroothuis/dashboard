@@ -16,7 +16,7 @@
     display: flex;
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
-    color: #0032A0;
+    color: #3D4A89;
     font-size: 4rem;
     margin-top: 40px; /* Adjust the value as needed */
 }
@@ -76,6 +76,11 @@
     z-index: 1;
 }
 
+.menu-level1, .menu-level2 {
+    padding-bottom: 5px;
+}
+
+
 /*Default display state*/
 .menu-level0-title {
     display: block;
@@ -95,9 +100,10 @@
     cursor: pointer;
 }
 
+
 /*Change color when hover over text*/
 .menu-level0-title:hover, .menu-level1-title:hover, .menu-level2:hover {
-    color: #0032A0;
+    color: #3D4A89;
     font-weight: bold;
 }
 
@@ -123,14 +129,14 @@
     position: absolute;
     overflow: hidden; /* to prevent scrollbar appearing */
     left: 0;
-    width: 400px;
     height: 700px;
     text-align: center;
     color: white;
+    transition: transform .5s ease;
 }
 .slide-in-content {
   padding: 5px 20px;
-  background: #0032A0;
+  background: #3D4A89;
     height: 700px;
   transition: transform .5s ease; /* our nice transition */
 }
@@ -138,11 +144,14 @@
   transform: translateX(-100%);
   -webkit-transform: translateX(-100%);
 }
-.slide-in.show .slide-in-content {
+.slide-in.show, .slide-in.show .slide-in-content {
   transform: translateX(0);
   -webkit-transform: translateX(0);
 }
-
+.slide-in{
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+}
 
 .graph-container {
     height: 600px;  /* Ensure the container has the same height */

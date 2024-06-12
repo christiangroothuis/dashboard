@@ -38,5 +38,5 @@ def project_convert(geo_data, data_directory, source='epsg:27700', target='latlo
             borough['geometry']['coordinates'][0][j] = long_lat
 
     # Write the modified GeoJSON object to a file (optional)
-    with open(os.path.join(data_directory, 'London_Boroughs_extracted.geojson'), 'w') as outfile:
+    with open(os.path.join(data_directory, 'geojson/London_Boroughs_extracted.geojson'), 'w') as outfile:
         json.dump(geo_data, outfile)

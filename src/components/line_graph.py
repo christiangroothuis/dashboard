@@ -4,25 +4,30 @@ import pandas as pd
 import os
 from pathlib import Path
 
-# Load and preprocess the data
-columns_to_keep = ['MONTH', 'Borough', 'Q13']
+
+# from .scripts.import_data import df_pas_granular as df
 
 data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
-df = pd.read_csv(os.path.join(data_directory,'pas_data_ward_level/PAS_ward_level_FY_20_21.csv'))
+df = pd.read_csv(os.path.join(data_directory, 'pas_granular.csv'))
+
+
+# Load and preprocess the data
+columns_to_keep = ['Year', 'Borough', 'Ss Agree Neither Agree Nor Disagree']
+
 
 # Create a list of unique responses, filtering out any null values
-responses = df['Q13'].dropna().unique()
+responses = df['Ss Agree Neither Agree Nor Disagree'].dropna().unique()
 
 # Create the initial plot with all boroughs, taking 'Fairly worried' as a default
 default_response = 'Fairly worried'
-filtered_df = df[df['Q13'] == default_response]
-count_by_month_borough = filtered_df.groupby(['MONTH', 'Borough']).size().reset_index(name='Count')
+filtered_df = df[df['Ss Agree Neither Agree Nor Disagree'] == default_response]
+count_by_month_borough = filtered_df.groupby(['Year', 'Borough']).size().reset_index(name='Count')
 boroughs = count_by_month_borough['Borough'].unique()
 
 fig = go.Figure()
 for borough in boroughs:
     df_borough = count_by_month_borough[count_by_month_borough['Borough'] == borough]
-    fig.add_trace(go.Scatter(x=df_borough['MONTH'], y=df_borough['Count'], mode='lines+markers', name=borough))
+    fig.add_trace(go.Scatter(x=df_borough['Year'], y=df_borough['Count'], mode='lines+markers', name=borough))
 
 buttons = []
 for borough in boroughs:
@@ -62,7 +67,7 @@ line_graph_layout = html.Div([
         dcc.Dropdown(
             id='borough-dropdown',
             options=[{'label': borough, 'value': borough} for borough in boroughs],
-            value=[boroughs[0]],
+            value=[boroughs],
             multi=True,
             style={"margin-bottom": "20px"},
         ),
@@ -118,13 +123,13 @@ def update_graph(selected_response, selected_borough):
         selected_boroughs = df['Borough'].unique()
 
     filtered_df = df[df['Q13'] == selected_response]
-    count_by_month_borough = filtered_df.groupby(['MONTH', 'Borough']).size().reset_index(name='Count')
+    count_by_month_borough = filtered_df.groupby(['Year', 'Borough']).size().reset_index(name='Count')
 
     fig = go.Figure()
 
     for borough in selected_borough:
         df_borough = count_by_month_borough[count_by_month_borough['Borough'] == borough]
-        fig.add_trace(go.Scatter(x=df_borough['MONTH'], y=df_borough['Count'], mode='lines+markers', name=borough))
+        fig.add_trace(go.Scatter(x=df_borough['Year'], y=df_borough['Count'], mode='lines+markers', name=borough))
 
     fig.update_layout(
         title=f'Number of "{selected_response}" responses over time',
