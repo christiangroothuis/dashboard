@@ -29,6 +29,10 @@ df_last_outcome = pd.read_csv(os.path.join(data_directory, 'ss_last_outcome.csv'
 df_economic = pd.read_csv(os.path.join(data_directory, 'economic.csv'))
 df_ethnicity = pd.read_csv(os.path.join(data_directory, 'ethnicity.csv'))
 
+df_pas_agg = pd.read_csv(os.path.join(data_directory, 'pas_original_aggregated.csv'))
+df_ss_agg = pd.read_csv(os.path.join(data_directory, 'stop_search_aggregated.csv'))
+df_street_agg = pd.read_csv(os.path.join(data_directory, 'street_aggregated.csv'))
+
 
 def create_nested_dropdown(map_categories_dict: dict, key_path: list):
     """
@@ -58,9 +62,9 @@ def create_nested_dropdown(map_categories_dict: dict, key_path: list):
             new_dropdown_children.append(html.Div(f'→ {key}', id=ID, className='menu-level2'))
         else:
             # children.append(html.Span(successor_key,className='menu-title'))
-            children = [html.Span(f'▶ {successor_key}', className='menu-level1-title'),
+            children = [html.Span(f'▶ {successor_key}', className='menu-level1-title', id=successor_key),
                         html.Div(children, className='menu-level1-content')]
-            new_dropdown_children.append(html.Div(id=successor_key,
+            new_dropdown_children.append(html.Div(id=f'{successor_key}_menu',
                                                   children=children, className="menu-level1"))
     return new_dropdown_children
 
@@ -88,10 +92,10 @@ def main_dropdowns(map_categories_dict: dict, key: str):
     :param key: The most outer key value, type str.
     :return: a column containing a DropdownMenu.
     """
-    x = [html.Span(key, className='menu-level0-title'), html.Div(create_nested_dropdown(map_categories_dict, [key]),
+    x = [html.Span(key, className='menu-level0-title', id=key), html.Div(create_nested_dropdown(map_categories_dict, [key]),
                                                                  className='menu-level0-content')]
     return dbc.Col(html.Div(
-        id=key,
+        id=f'{key}_menu',
         children=x,
         className="menu-level0",
     ), style={'margin-right': '45px'})
@@ -112,8 +116,11 @@ choropleth_map_layout = dcc.Graph(id="choropleth-map")
 
 button_to_borough = {str(i): borough for i, borough in enumerate(df_pas_original['Borough'].unique())}
 attribute_click_counts = {str(i): 0 for i in range(0, 165)}
+attribute_click_counts_agg = {'PAS': 0, 'Confidence': 0, 'Trust': 0, 'Stop&Search': 0,
+                              'StreetCrime': 0, 'CrimeOutcomes': 0}
 previously_clicked_attribute = 0
-
+previously_clicked_attribute_agg = 0
+agg_flag = False
 
 # =====================
 #      Callbacks
@@ -129,22 +136,22 @@ previously_clicked_attribute = 0
     # PAS
     Input('PAS', 'n_clicks'),
     Input('Confidence', 'n_clicks'), Input('Trust', 'n_clicks'),
-    Input('PAS-Granular', 'n_clicks'), Input('Other', 'n_clicks'),
+    # Input('PAS-Granular', 'n_clicks'), Input('Other', 'n_clicks'),
 
     # Economic
-    Input('Economic', 'n_clicks'),
-    Input('Demographic', 'n_clicks'), Input('Industry types', 'n_clicks'),
-    Input('Employment', 'n_clicks'),
+    # Input('Economic', 'n_clicks'),
+    # Input('Demographic', 'n_clicks'), Input('Industry types', 'n_clicks'),
+    # Input('Employment', 'n_clicks'),
 
     # Stop and search
     Input('Stop&Search', 'n_clicks'),
-    Input('Age Range', 'n_clicks'), Input('Officer Defined Ethnicity', 'n_clicks'),
-    Input('Legislation', 'n_clicks'), Input('Search Object', 'n_clicks'),
-    Input('Stop and Search Outcome', 'n_clicks'),
+    # Input('Age Range', 'n_clicks'), Input('Officer Defined Ethnicity', 'n_clicks'),
+    # Input('Legislation', 'n_clicks'), Input('Search Object', 'n_clicks'),
+    # Input('Stop and Search Outcome', 'n_clicks'),
 
     # Street
     Input('StreetCrime', 'n_clicks'),
-    Input('Crime Type Street', 'n_clicks'), Input('Last Outcome', 'n_clicks'),
+    # Input('Crime Type Street', 'n_clicks'), Input('Last Outcome', 'n_clicks'),
 
     # Outcomes
     Input('CrimeOutcomes', 'n_clicks'),
@@ -157,6 +164,8 @@ def update_map(*args):
     """
     global sub_attribute
     global attribute_click_counts, previously_clicked_attribute
+    global attribute_click_counts_agg, previously_clicked_attribute_agg
+    global agg_flag
 
     # Extract the number of clicks for each attribute selection
     attribute_clicks = args[:124]
@@ -164,100 +173,137 @@ def update_map(*args):
 
     # Extract the selected time interval
     year_range = args[124]
-    print(year_range)
-
-    aggregated_attribute_clicks = args[125:]
-    print(aggregated_attribute_clicks)
 
     # Determine which attribute was clicked most recently
     most_recently_clicked = None
     for i in range(0, 124):
         if attribute_clicks[i] > attribute_click_counts[str(i)]:
+            agg_flag = False
             most_recently_clicked = i
             previously_clicked_attribute = most_recently_clicked
             attribute_click_counts[str(i)] = attribute_clicks[i]
 
-    button_id = str(previously_clicked_attribute)
-    print(button_id)
+    aggregated_attribute_clicks = args[125:]
+    aggregated_attribute_clicks = [click if click is not None else 0 for click in aggregated_attribute_clicks]
+    agg_attributes = ['PAS', 'Confidence', 'Trust', 'Stop&Search', 'StreetCrime', 'CrimeOutcomes']
+    agg_attributes_zip = list(zip(aggregated_attribute_clicks, agg_attributes))
+
+    for click, attribute in agg_attributes_zip:
+        if click > attribute_click_counts_agg[attribute]:
+            agg_flag = True
+            most_recently_clicked_agg = attribute
+            previously_clicked_attribute_agg = most_recently_clicked_agg
+            attribute_click_counts_agg[attribute] = click
+
+    if agg_flag:
+        button_id = str(previously_clicked_attribute_agg)
+    else:
+        button_id = str(previously_clicked_attribute)
+
     df_data = pd.DataFrame()
 
-    # Find out what attribute should be displayed in plot depending on IDs of type str(int).
-    if button_id is None:
-        df_data = df_pas_original
-        sub_attribute = '"Good Job" local'  # Default to Trust_score if no button is clicked
+    if button_id.isdigit():
 
-    # PAS
-    elif 0 <= int(button_id) <= 9:
-        df_data = df_pas_original.copy()
-        if 0 <= int(button_id) <= 4:
-            attributes = map_categories_dict['PAS']['Confidence']
-            sub_attribute = find_button_attribute(attributes, button_id)
-        elif 5 <= int(button_id) <= 7:
-            attributes = map_categories_dict['PAS']['Trust']
-            sub_attribute = find_button_attribute(attributes, button_id)
-        elif 8 <= int(button_id) <= 9:
-            attributes = map_categories_dict['PAS']['Other']
+        # Find out what attribute should be displayed in plot depending on IDs of type str(int).
+        if button_id is None:
+            df_data = df_pas_original
+            sub_attribute = '"Good Job" local'  # Default to Trust_score if no button is clicked
+
+        # PAS
+        elif 0 <= int(button_id) <= 9:
+            df_data = df_pas_original.copy()
+            if 0 <= int(button_id) <= 4:
+                attributes = map_categories_dict['PAS']['Confidence']
+                sub_attribute = find_button_attribute(attributes, button_id)
+            elif 5 <= int(button_id) <= 7:
+                attributes = map_categories_dict['PAS']['Trust']
+                sub_attribute = find_button_attribute(attributes, button_id)
+            elif 8 <= int(button_id) <= 9:
+                attributes = map_categories_dict['PAS']['Other']
+                sub_attribute = find_button_attribute(attributes, button_id)
+
+        # Economic and Ethnicity
+        elif 11 <= int(button_id) <= 28:
+            if 11 <= int(button_id) <= 15:
+                df_data = df_ethnicity.copy()
+                attributes = map_categories_dict['Economic']['Demographic']
+                sub_attribute = find_button_attribute(attributes, button_id)
+            elif 16 <= int(button_id) <= 22:
+                df_data = df_economic.copy()
+                attributes = map_categories_dict['Economic']['Industry types']
+                sub_attribute = find_button_attribute(attributes, button_id)
+            elif 23 <= int(button_id) <= 28:
+                df_data = df_economic.copy()
+                attributes = map_categories_dict['Economic']['Employment']
+                sub_attribute = find_button_attribute(attributes, button_id)
+
+        # Stop&Search
+        elif 49 <= int(button_id) <= 85:
+            if 49 <= int(button_id) <= 53:
+                df_data = df_age_rage.copy()
+                attributes = map_categories_dict['Stop&Search']['Age Range']
+                sub_attribute = find_button_attribute(attributes, button_id)
+            elif 54 <= int(button_id) <= 57:
+                df_data = df_officer_def_ethnicity.copy()
+                attributes = map_categories_dict['Stop&Search']['Officer Defined Ethnicity']
+                sub_attribute = find_button_attribute(attributes, button_id)
+            elif 58 <= int(button_id) <= 62:
+                df_data = df_legislation.copy()
+                attributes = map_categories_dict['Stop&Search']['Legislation']
+                sub_attribute = find_button_attribute(attributes, button_id)
+            elif 63 <= int(button_id) <= 70:
+                df_data = df_search_object.copy()
+                attributes = map_categories_dict['Stop&Search']['Search Object']
+                sub_attribute = find_button_attribute(attributes, button_id)
+            elif 71 <= int(button_id) <= 85:
+                df_data = df_ss_outcome.copy()
+                attributes = map_categories_dict['Stop&Search']['Stop and Search Outcome']
+                sub_attribute = find_button_attribute(attributes, button_id)
+
+        # StreetCrime
+        elif 86 <= int(button_id) <= 123:
+            if 86 <= int(button_id) <= 99:
+                df_data = df_crime_type.copy()
+                attributes = map_categories_dict['StreetCrime']['Crime Type Street']
+                sub_attribute = find_button_attribute(attributes, button_id)
+            elif 100 <= int(button_id) <= 123:
+                df_data = df_last_outcome.copy()
+                attributes = map_categories_dict['StreetCrime']['Last Outcome']
+                sub_attribute = find_button_attribute(attributes, button_id)
+
+        # Outcomes
+        elif 29 <= int(button_id) <= 48:
+            df_data = df_outcomes.copy()
+            attributes = map_categories_dict['CrimeOutcomes']
             sub_attribute = find_button_attribute(attributes, button_id)
 
-    # Economic and Ethnicity
-    elif 11 <= int(button_id) <= 28:
-        if 11 <= int(button_id) <= 15:
-            df_data = df_ethnicity.copy()
-            attributes = map_categories_dict['Economic']['Demographic']
-            sub_attribute = find_button_attribute(attributes, button_id)
-        elif 16 <= int(button_id) <= 22:
-            df_data = df_economic.copy()
-            attributes = map_categories_dict['Economic']['Industry types']
-            sub_attribute = find_button_attribute(attributes, button_id)
-        elif 23 <= int(button_id) <= 28:
-            df_data = df_economic.copy()
-            attributes = map_categories_dict['Economic']['Employment']
-            sub_attribute = find_button_attribute(attributes, button_id)
-
-    # Stop&Search
-    elif 49 <= int(button_id) <= 85:
-        if 49 <= int(button_id) <= 53:
-            df_data = df_age_rage.copy()
-            attributes = map_categories_dict['Stop&Search']['Age Range']
-            sub_attribute = find_button_attribute(attributes, button_id)
-        elif 54 <= int(button_id) <= 57:
-            df_data = df_officer_def_ethnicity.copy()
-            attributes = map_categories_dict['Stop&Search']['Officer Defined Ethnicity']
-            sub_attribute = find_button_attribute(attributes, button_id)
-        elif 58 <= int(button_id) <= 62:
-            df_data = df_legislation.copy()
-            attributes = map_categories_dict['Stop&Search']['Legislation']
-            sub_attribute = find_button_attribute(attributes, button_id)
-        elif 63 <= int(button_id) <= 70:
-            df_data = df_search_object.copy()
-            attributes = map_categories_dict['Stop&Search']['Search Object']
-            sub_attribute = find_button_attribute(attributes, button_id)
-        elif 71 <= int(button_id) <= 85:
-            df_data = df_ss_outcome.copy()
-            attributes = map_categories_dict['Stop&Search']['Stop and Search Outcome']
-            sub_attribute = find_button_attribute(attributes, button_id)
-
-    # StreetCrime
-    elif 86 <= int(button_id) <= 123:
-        if 86 <= int(button_id) <= 99:
-            df_data = df_crime_type.copy()
-            attributes = map_categories_dict['StreetCrime']['Crime Type Street']
-            sub_attribute = find_button_attribute(attributes, button_id)
-        elif 100 <= int(button_id) <= 123:
-            df_data = df_last_outcome.copy()
-            attributes = map_categories_dict['StreetCrime']['Last Outcome']
-            sub_attribute = find_button_attribute(attributes, button_id)
-
-    # Outcomes
-    elif 29 <= int(button_id) <= 48:
-        df_data = df_outcomes.copy()
-        attributes = map_categories_dict['CrimeOutcomes']
-        sub_attribute = find_button_attribute(attributes, button_id)
-
+        else:
+            sub_attribute = None
     else:
-        sub_attribute = None
+        if button_id == 'PAS':
+            df_data = df_pas_agg.copy()
+            sub_attribute = 'PAS'
+        elif button_id == 'Confidence':
+            df_data = df_pas_agg.copy()
+            sub_attribute = 'Confidence'
+        elif button_id == 'Trust':
+            df_data = df_pas_agg.copy()
+            sub_attribute = 'Trust'
+
+        elif button_id == 'Stop&Search':
+            df_data = df_ss_agg.copy()
+            sub_attribute = 'Stop&Search'
+        elif button_id == 'StreetCrime':
+            df_data = df_street_agg.copy()
+            sub_attribute = 'StreetCrime'
+        elif button_id == 'CrimeOutcomes':
+            df_data = df_outcomes.copy()
+            sub_attribute = 'CrimeOutcomes'
+        else:
+            sub_attribute = None
 
     if sub_attribute is None:
+        df_data = df_pas_original.copy()
         sub_attribute = '"Good Job" local'  # Default to Trust_score if no button is clicked
 
     start_year, end_year = year_range
