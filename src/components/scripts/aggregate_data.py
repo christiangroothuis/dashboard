@@ -12,7 +12,7 @@ data_directory = os.path.join(Path(os.getcwd()).parent.parent.parent.parent, 'da
 df_pas_original = pd.read_csv(os.path.join(data_directory, 'pas_original.csv')).drop(columns='Unnamed: 0')
 df_ss = pd.read_csv(os.path.join(data_directory, 'stop_search.csv')).drop(columns='Unnamed: 0')
 df_street = pd.read_csv(os.path.join(data_directory, 'street.csv')).drop(columns='Unnamed: 0')
-df_outcomes = pd.read_csv(os.path.join(data_directory, 'outcomes_pivot.csv')).drop(columns='Unnamed: 0')
+df_outcomes = pd.read_csv(os.path.join(data_directory, 'outcomes.csv')).drop(columns='Unnamed: 0')
 
 # PAS DATA
 trust_list = list()
@@ -48,6 +48,14 @@ outcomes_relevant_attributes.remove('Borough')
 outcomes_relevant_attributes.remove('Year')
 df_outcomes['CrimeOutcomes'] = df_outcomes[outcomes_relevant_attributes].sum(axis=1)
 
+
+# StopSearch, StreetCrime
+def london_nan(dataframe):
+    dataframe[dataframe['Borough'] == 'City of London'] = None
+    return dataframe
+
+df_ss = london_nan(df_ss)
+df_street = london_nan(df_street)
 
 # SAVE DATA
 df_pas_original.to_csv(os.path.join(base_dir, 'data/pas_original_aggregated.csv'))

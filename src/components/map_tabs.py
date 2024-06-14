@@ -136,24 +136,10 @@ agg_flag = False
     # PAS
     Input('PAS', 'n_clicks'),
     Input('Confidence', 'n_clicks'), Input('Trust', 'n_clicks'),
-    # Input('PAS-Granular', 'n_clicks'), Input('Other', 'n_clicks'),
 
-    # Economic
-    # Input('Economic', 'n_clicks'),
-    # Input('Demographic', 'n_clicks'), Input('Industry types', 'n_clicks'),
-    # Input('Employment', 'n_clicks'),
-
-    # Stop and search
+    # Crime data
     Input('Stop&Search', 'n_clicks'),
-    # Input('Age Range', 'n_clicks'), Input('Officer Defined Ethnicity', 'n_clicks'),
-    # Input('Legislation', 'n_clicks'), Input('Search Object', 'n_clicks'),
-    # Input('Stop and Search Outcome', 'n_clicks'),
-
-    # Street
     Input('StreetCrime', 'n_clicks'),
-    # Input('Crime Type Street', 'n_clicks'), Input('Last Outcome', 'n_clicks'),
-
-    # Outcomes
     Input('CrimeOutcomes', 'n_clicks'),
 )
 def update_map(*args):
@@ -307,8 +293,8 @@ def update_map(*args):
         sub_attribute = '"Good Job" local'  # Default to Trust_score if no button is clicked
 
     start_year, end_year = year_range
-    df_data = df_data[df_data['Year'].between(start_year - 1, end_year)]
-    df_data = df_data.drop(columns='Year').groupby('Borough').sum().reset_index()
+    df_data = df_data[df_data['Year'].between(start_year, end_year)]
+    df_data = df_data.drop(columns='Year').groupby('Borough').mean().reset_index()
 
     # Define the choropleth plot
     fig = px.choropleth(
