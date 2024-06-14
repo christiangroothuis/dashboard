@@ -116,19 +116,19 @@ previously_clicked_attribute = 0
 #      Callbacks
 # =====================
 # Define callback to update map based on dropdown selection
+df_data = pd.DataFrame()
+
+
 @callback(
     Output("choropleth-map", "figure"),
+    Output('shared-data-store', 'data'),
     [*[Input(str(i), "n_clicks") for i in range(0, 124)],
      Input('range-slider', 'value')],
 )
 def update_map(*args):
-    """
-    Updates the choropleth plot based on the nested dropdown.
-    :param args: the IDs of all selectable categories in the nested drop-downs.
-    :return: choropleth plot.
-    """
     global sub_attribute
     global attribute_click_counts, previously_clicked_attribute
+    global df_data
 
     # Extract the number of clicks for each attribute selection
     attribute_clicks = args[:124]
@@ -146,7 +146,6 @@ def update_map(*args):
             attribute_click_counts[str(i)] = attribute_clicks[i]
 
     button_id = str(previously_clicked_attribute)
-    print(button_id)
     df_data = pd.DataFrame()
 
     # Find out what attribute should be displayed in plot depending on IDs of type str(int).
@@ -239,28 +238,11 @@ def update_map(*args):
         projection="mercator")
     fig.update_geos(fitbounds='locations', visible=False)
     fig.update_layout(margin={'l': 0, 'b': 0, 't': 0, 'r': 0},
-                      width=800,
+                      width=600,
                       height=600)
 
     fig.update_coloraxes(colorbar_len=0.5)
 
-    return fig
+    return fig, df_data.to_dict('records')
 
-@callback(
-    Output('selected_borough', 'data'),
-    Input('choropleth-map', 'clickData'),
-    State('selected_borough', 'data')  # Add State to get current data
-)
-def update_stored_borough(clickData, stored_data):
-    if stored_data is None:  # Handle the case when there is no initial data
-        stored_data = []
-
-    if clickData:
-        borough = clickData['points'][0]['location']
-        if borough in stored_data:
-            stored_data.remove(borough)  # Remove the borough if already selected
-        else:
-            stored_data.append(borough)  # Add the borough if not selected
-
-    return stored_data
 
