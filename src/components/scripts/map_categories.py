@@ -16,6 +16,8 @@ street_last_out_cat = pd.read_csv(os.path.join(data_directory, 'ss_last_outcome.
 
 df_outcomes = pd.read_csv(os.path.join(data_directory, 'outcomes_pivot.csv'))
 
+pas_questions = pd.read_csv(os.path.join(data_directory, 'pas_questions_renamed.csv')).drop(columns=['Year', 'Borough', 'month']).columns
+
 # Define list of tuples
 def define_tuple_lists(offset, category):
     category_tuple_list = [(str(i + offset), name) for i, name in enumerate(category)]
@@ -24,9 +26,12 @@ def define_tuple_lists(offset, category):
     return category_tuple_list, offset
 
 
-offset = 29
-outcomes_tuple_list, offset = define_tuple_lists(offset, outcome_types)
+offset = 10
+
+pas_questions_tuple_list, offset = define_tuple_lists(offset, pas_questions)
 print(offset)
+
+offset = 56
 
 ss_age_range_tuple_list, offset = define_tuple_lists(offset, ss_age_range)
 print(offset)
@@ -43,11 +48,13 @@ print(offset)
 ss_outcome_tuple_list, offset = define_tuple_lists(offset, ss_outcome)
 print(offset)
 
-
 street_crime_type_tuple_list, offset = define_tuple_lists(offset, street_crime_type)
 print(offset)
 
 street_last_out_cat_type_tuple_list, offset = define_tuple_lists(offset, street_last_out_cat)
+print(offset)
+
+outcomes_tuple_list, offset = define_tuple_lists(offset, outcome_types)
 print(offset)
 
 
@@ -62,34 +69,34 @@ map_categories_dict = {
         'Trust': [('5', "Listen to concerns"),
                   ('6', "Relied on to be there"),
                   ('7', "Treat everyone fairly")],
-        'PAS-Granular': [(str(10), 'Test1')],
         'Other': [('8', "Contact ward officer"),
                   ('9', "Trust MPS")],
+        'PAS-Granular': pas_questions_tuple_list,
     },
     'Economic':{
         'Demographic': [
-            (str(11), 'White [%]'),
-            (str(12), 'Asian [%]'),
-            (str(13), 'Black [%]'),
-            (str(14), 'Mixed Other [%]'),
-            (str(15), 'Total'),
+            (str(38), 'White [%]'),
+            (str(39), 'Asian [%]'),
+            (str(40), 'Black [%]'),
+            (str(41), 'Mixed Other [%]'),
+            (str(42), 'Total'),
         ],
         'Industry types': [
-            (str(16), 'Manufacturing [%]'),
-            (str(17), 'Constructing [%]'),
-            (str(18), 'Hotels and Restaurants [%]'),
-            (str(19), 'Transport and Communication [%]'),
-            (str(20), 'Banking and Finance [%]'),
-            (str(21), 'Public Administration, Education and Health [%]'),
-            (str(22), 'Other Services [%]'),
+            (str(43), 'Manufacturing [%]'),
+            (str(44), 'Constructing [%]'),
+            (str(45), 'Hotels and Restaurants [%]'),
+            (str(46), 'Transport and Communication [%]'),
+            (str(47), 'Banking and Finance [%]'),
+            (str(48), 'Public Administration, Education and Health [%]'),
+            (str(49), 'Other Services [%]'),
         ],
         'Employment': [
-            (str(23), 'Job Density [%]'),
-            (str(24), 'Employed [%]'),
-            (str(25), 'Self-Employed [%]'),
-            (str(26), 'Full-Time:Part-time'),
-            (str(27), 'Active:Inactive Male'),
-            (str(28), 'Active:Inactive Female'),
+            (str(50), 'Job Density [%]'),
+            (str(51), 'Employed [%]'),
+            (str(52), 'Self-Employed [%]'),
+            (str(53), 'Full-Time:Part-time'),
+            (str(54), 'Active:Inactive Male'),
+            (str(55), 'Active:Inactive Female'),
         ]
     },
     'Stop&Search': {
