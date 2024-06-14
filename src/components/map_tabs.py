@@ -17,8 +17,6 @@ df_pas_original = pd.read_csv(os.path.join(data_directory, 'pas_original.csv'))
 df_pas_granular = pd.read_csv(os.path.join(data_directory, 'pas_granular.csv'))
 df_pas_questions = pd.read_csv(os.path.join(data_directory, 'pas_proportions.csv'))
 
-print(df_pas_original.columns)
-
 df_outcomes = pd.read_csv(os.path.join(data_directory, 'outcomes_pivot.csv')).drop(columns='Unnamed: 0')
 df_age_rage = pd.read_csv(os.path.join(data_directory, 'age_range.csv')).drop(columns='Unnamed: 0')
 df_officer_def_ethnicity = pd.read_csv(os.path.join(data_directory, 'officer_def_ethnicity.csv')).drop(
