@@ -42,8 +42,6 @@ from dash import callback, Output, Input, State
 import plotly.express as px
 import plotly.colors
 
-
-
 @callback(
     Output("h_barchart", "figure"),
     Input('shared-data-store', 'data'),
@@ -73,10 +71,12 @@ def update_h_barchart(data, selected_borough, current_figure):
         # Create the bar chart with selected boroughs colored and others default
         fig = go.Figure()
 
-        selected_colors = {borough: viridis_colors[i % len(viridis_colors)] for i, borough in enumerate(selected_borough)}
+        # Create a color map for boroughs
+        unique_boroughs = df_filtered['Borough'].unique()
+        color_map = {borough: viridis_colors[i % len(viridis_colors)] for i, borough in enumerate(unique_boroughs)}
 
         for index, row in df_filtered.iterrows():
-            color = selected_colors[row['Borough']] if row['selected'] else default_color
+            color = color_map[row['Borough']] if row['selected'] else default_color
             fig.add_trace(go.Bar(
                 y=[row['Borough']],
                 x=[row['Count']],
@@ -103,12 +103,13 @@ def update_h_barchart(data, selected_borough, current_figure):
         margin={'l': 100, 'b': 50, 't': 50, 'r': 0},
         width=900,
         height=600,
-        showlegend = False
+        showlegend=False,  # Turn off the legend
+        plot_bgcolor='rgba(0, 0, 0, 0)',  # Make the plot background transparent
+        paper_bgcolor='rgba(0, 0, 0, 0)'  # Make the paper background transparent
     )
     fig.update_xaxes(title=None)
     fig.update_yaxes(title=None)
     return fig
-
 
 
 @callback(
