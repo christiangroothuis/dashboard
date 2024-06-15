@@ -16,7 +16,12 @@ street_last_out_cat = pd.read_csv(os.path.join(data_directory, 'ss_last_outcome.
 
 df_outcomes = pd.read_csv(os.path.join(data_directory, 'outcomes_pivot.csv'))
 
-pas_questions = pd.read_csv(os.path.join(data_directory, 'pas_questions_renamed.csv')).drop(columns=['Year', 'Borough', 'month']).columns
+pas_questions = ['SS Agree', 'SS Fair', 'Crime Victim', 'Officer Contact', 'Met Trust',
+        'Police Accountable', 'Met Career', 'Gangs', 'Law Obligation', 'Area Living Time',
+        'Crime Local Worry', 'Informed Local', 'Informed London', 'Asb Worry', 'Guns',
+        'Knife Crime', 'People Trusted', 'People Courtesy', 'People Help', 'Call Suspicious',
+        'Different Backgrounds', 'Good Job Local', 'Good Job London', 'Police Reliance',
+        'Police Respect', 'Police Fair Treat', 'Community Matter', 'Local Concerns']
 
 # Define list of tuples
 def define_tuple_lists(offset, category):

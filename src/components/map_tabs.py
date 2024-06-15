@@ -14,7 +14,6 @@ data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
 # Import all data
 geo_data, _ = import_geo_borough_data(data_directory, 'geo_boroughs.geojson')
 df_pas_original = pd.read_csv(os.path.join(data_directory, 'pas_original.csv'))
-df_pas_granular = pd.read_csv(os.path.join(data_directory, 'pas_granular.csv'))
 df_pas_questions = pd.read_csv(os.path.join(data_directory, 'pas_proportions.csv'))
 
 df_outcomes = pd.read_csv(os.path.join(data_directory, 'outcomes_pivot.csv')).drop(columns='Unnamed: 0')
@@ -129,7 +128,7 @@ agg_flag = False
 # Define callback to update map based on dropdown selection
 @callback(
     Output("choropleth-map", "figure"),
-    [*[Input(str(i), "n_clicks") for i in range(0, 152)],
+    [*[Input(str(i), "n_clicks") for i in range(0, 151)],
      Input('range-slider', 'value')],
 
     # PAS
@@ -153,22 +152,22 @@ def update_map(*args):
     global agg_flag
 
     # Extract the number of clicks for each attribute selection
-    attribute_clicks = args[:152]
+    attribute_clicks = args[:151]
     attribute_clicks = [click if click is not None else 0 for click in attribute_clicks]
 
     # Extract the selected time interval
-    year_range = args[152]
+    year_range = args[151]
 
     # Determine which attribute was clicked most recently
     most_recently_clicked = None
-    for i in range(0, 152):
+    for i in range(0, 151):
         if attribute_clicks[i] > attribute_click_counts[str(i)]:
             agg_flag = False
             most_recently_clicked = i
             previously_clicked_attribute = most_recently_clicked
             attribute_click_counts[str(i)] = attribute_clicks[i]
 
-    aggregated_attribute_clicks = args[153:]
+    aggregated_attribute_clicks = args[152:]
     aggregated_attribute_clicks = [click if click is not None else 0 for click in aggregated_attribute_clicks]
     agg_attributes = ['PAS', 'Confidence', 'Trust', 'Stop&Search', 'StreetCrime', 'CrimeOutcomes']
     agg_attributes_zip = list(zip(aggregated_attribute_clicks, agg_attributes))
@@ -303,23 +302,23 @@ def update_map(*args):
 
     if pas_granular_bool:
         # list of question columns
-        questions_names = ['ss_agree', 'ss_fair', 'crime_victim', 'officer_contact', 'met_trust',
-        'police_accountable', 'met_career', 'gangs', 'law_obligation', 'area_living_time',
-        'crime_local_worry', 'informed_local', 'informed_london', 'asb_worry', 'guns',
-        'knife_crime', 'people_trusted', 'people_courtesy', 'people_help', 'call_suspicious',
-        'different_backgrounds', 'good_job_local', 'good_job_london', 'police_reliance',
-        'police_respect', 'police_fair_treat', 'community_matter', 'local_concerns']
+        questions_names = ['SS Agree', 'SS Fair', 'Crime Victim', 'Officer Contact', 'Met Trust',
+        'Police Accountable', 'Met Career', 'Gangs', 'Law Obligation', 'Area Living Time',
+        'Crime Local Worry', 'Informed Local', 'Informed London', 'Asb Worry', 'Guns',
+        'Knife Crime', 'People Trusted', 'People Courtesy', 'People Help', 'Call Suspicious',
+        'Different Backgrounds', 'Good Job Local', 'Good Job London', 'Police Reliance',
+        'Police Respect', 'Police Fair Treat', 'Community Matter', 'Local Concerns']
 
         def remove_prefix_suffix(s, prefix):
             # Remove the suffix "_proportion"
-            s = s.rsplit('_', 1)[0]
-            result = s.removeprefix(prefix + '_')
+            s = s.rsplit(' ', 1)[0]
+            result = s.removeprefix(prefix + ' ')
             return result
 
         for prefix in questions_names:
             cols = [col for col in df_data.columns if col.startswith(prefix)]
             # Create hover text
-            df_data[f'hover_text_{prefix}'] = df_data[cols].apply(
+            df_data[f'Proportions {prefix}<br>'] = df_data[cols].apply(
                 lambda row: '<br>'.join([f'{col}: {row[col]:.2f}' for col in df_data.columns if col.startswith(prefix)]) , axis=1)
             # Get the mode
             df_data[f'{prefix}_mode_initial'] = df_data[cols].idxmax(axis=1)
@@ -331,7 +330,7 @@ def update_map(*args):
 
         fig = px.choropleth(
         data_frame=df_data, geojson=geo_data, locations="Borough", featureidkey="properties.name",
-        color=sub_attribute, hover_data={f'hover_text_{sub_attribute}': True},
+        color=sub_attribute, hover_data={f'Proportions {sub_attribute}<br>': True},
         color_discrete_sequence=px.colors.qualitative.D3, projection="mercator")
 
     else:
