@@ -16,7 +16,12 @@ street_last_out_cat = pd.read_csv(os.path.join(data_directory, 'ss_last_outcome.
 
 df_outcomes = pd.read_csv(os.path.join(data_directory, 'outcomes_pivot.csv'))
 
-pas_questions = pd.read_csv(os.path.join(data_directory, 'pas_questions_renamed.csv')).drop(columns=['Year', 'Borough', 'month']).columns
+pas_questions = ['SS Agree', 'SS Fair', 'Crime Victim', 'Officer Contact', 'Met Trust',
+        'Police Accountable', 'Met Career', 'Gangs', 'Law Obligation', 'Area Living Time',
+        'Crime Local Worry', 'Informed Local', 'Informed London', 'Asb Worry', 'Guns',
+        'Knife Crime', 'People Trusted', 'People Courtesy', 'People Help', 'Call Suspicious',
+        'Different Backgrounds', 'Good Job Local', 'Good Job London', 'Police Reliance',
+        'Police Respect', 'Police Fair Treat', 'Community Matter', 'Local Concerns']
 
 # Define list of tuples
 def define_tuple_lists(offset, category):
@@ -60,19 +65,6 @@ print(offset)
 
 # Dictionary
 map_categories_dict = {
-    # 'PAS': {
-    #     'Confidence': [('0', '"Good Job" local'),
-    #                    ('1', "Informed local"),
-    #                    ('2', "Listen to concerns"),
-    #                    ('3', "Relied on to be there"),
-    #                    ('4', "Understand issues")],
-    #     'Trust': [('5', "Listen to concerns"),
-    #               ('6', "Relied on to be there"),
-    #               ('7', "Treat everyone fairly")],
-    #     'PAS-Granular': [(str(10), 'Test1')],
-    #     'Other': [('8', "Contact ward officer"),
-    #               ('9', "Trust MPS")],
-    # },
     'PAS': {
         'Confidence': [('0', '"Good Job" local'),
                        ('1', "Informed local"),
@@ -113,7 +105,6 @@ map_categories_dict = {
         ]
     },
     'Stop&Search': {
-                # 'Male:Female': [(str(140), None)],
                 'Age Range': ss_age_range_tuple_list,
                 "Officer Defined Ethnicity": ss_officer_def_ethnicity_tuple_list,
                 "Legislation": ss_legislation_tuple_list,
@@ -125,5 +116,3 @@ map_categories_dict = {
         },
     'CrimeOutcomes': outcomes_tuple_list,
 }
-
-print(map_categories_dict)

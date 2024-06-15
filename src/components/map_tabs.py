@@ -14,8 +14,7 @@ data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
 # Import all data
 geo_data, _ = import_geo_borough_data(data_directory, 'geo_boroughs.geojson')
 df_pas_original = pd.read_csv(os.path.join(data_directory, 'pas_original.csv'))
-df_pas_granular = pd.read_csv(os.path.join(data_directory, 'pas_granular.csv'))
-df_pas_questions = pd.read_csv(os.path.join(data_directory, 'pas_proportions.csv'))
+df_pas_questions = pd.read_csv(os.path.join(data_directory, 'pas_proportions_test.csv'))
 
 df_outcomes = pd.read_csv(os.path.join(data_directory, 'outcomes_pivot.csv')).drop(columns='Unnamed: 0')
 df_age_rage = pd.read_csv(os.path.join(data_directory, 'age_range.csv')).drop(columns='Unnamed: 0')
@@ -243,23 +242,22 @@ def update_map(*args):
 
     if pas_granular_bool:
         # list of question columns
-        questions_names = ['ss_agree', 'ss_fair', 'crime_victim', 'officer_contact', 'met_trust',
-        'police_accountable', 'met_career', 'gangs', 'law_obligation', 'area_living_time',
-        'crime_local_worry', 'informed_local', 'informed_london', 'asb_worry', 'guns',
-        'knife_crime', 'people_trusted', 'people_courtesy', 'people_help', 'call_suspicious',
-        'different_backgrounds', 'good_job_local', 'good_job_london', 'police_reliance',
-        'police_respect', 'police_fair_treat', 'community_matter', 'local_concerns']
+        questions_names = ['SS Agree', 'SS Fair', 'Crime Victim', 'Officer Contact', 'Met Trust',
+        'Police Accountable', 'Met Career', 'Gangs', 'Law Obligation', 'Area Living Time',
+        'Crime Local Worry', 'Informed Local', 'Informed London', 'Asb Worry', 'Guns',
+        'Knife Crime', 'People Trusted', 'People Courtesy', 'People Help', 'Call Suspicious',
+        'Different Backgrounds', 'Good Job Local', 'Good Job London', 'Police Reliance',
+        'Police Respect', 'Police Fair Treat', 'Community Matter', 'Local Concerns']
 
         def remove_prefix_suffix(s, prefix):
-            # Remove the suffix "_proportion"
-            s = s.rsplit('_', 1)[0]
-            result = s.removeprefix(prefix + '_')
+            s = s.rsplit(' ', 1)[0]
+            result = s.removeprefix(prefix + ' ')
             return result
 
         for prefix in questions_names:
             cols = [col for col in df_data.columns if col.startswith(prefix)]
             # Create hover text
-            df_data[f'hover_text_{prefix}'] = df_data[cols].apply(
+            df_data[f'Proportions {prefix}<br>'] = df_data[cols].apply(
                 lambda row: '<br>'.join([f'{col}: {row[col]:.2f}' for col in df_data.columns if col.startswith(prefix)]) , axis=1)
             # Get the mode
             df_data[f'{prefix}_mode_initial'] = df_data[cols].idxmax(axis=1)
@@ -269,16 +267,9 @@ def update_map(*args):
             if col_name in df_data.columns:
                 df_data.drop(columns=col_name, inplace=True)
 
-        # if df_data[sub_attribute].nunique() == 1:
-        #     # Plot with single categorical color scale (blue)
-        #     fig = px.choropleth(
-        #         data_frame=df_data, geojson=geo_data, locations="Borough", featureidkey="properties.name",
-        #         color=sub_attribute, hover_data={f'hover_text_{sub_attribute}': True},
-        #         color_discrete_sequence=["blue"], projection="mercator")
-        # else:
         fig = px.choropleth(
         data_frame=df_data, geojson=geo_data, locations="Borough", featureidkey="properties.name",
-        color=sub_attribute, hover_data={f'hover_text_{sub_attribute}': True},
+        color=sub_attribute, hover_data={f'Proportions {sub_attribute}<br>': True},
         color_discrete_sequence=px.colors.qualitative.D3, projection="mercator")
 
     else:
