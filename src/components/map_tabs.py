@@ -306,9 +306,9 @@ def update_map(*args):
 
     if pas_granular_bool:
         # list of question columns
-        questions_names = ['SS Agree', 'SS Fair', 'Crime Victim', 'Officer Contact', 'Met Trust',
+        questions_names = ['Stop and Search Agree', 'Stop and Search Fair', 'Crime Victim', 'Officer Contact', 'Met Trust',
         'Police Accountable', 'Met Career', 'Gangs', 'Law Obligation', 'Area Living Time',
-        'Crime Local Worry', 'Informed Local', 'Informed London', 'Asb Worry', 'Guns',
+        'Crime Local Worry', 'Informed Local', 'Informed London', 'ASB Worry', 'Guns',
         'Knife Crime', 'People Trusted', 'People Courtesy', 'People Help', 'Call Suspicious',
         'Different Backgrounds', 'Good Job Local', 'Good Job London', 'Police Reliance',
         'Police Respect', 'Police Fair Treat', 'Community Matter', 'Local Concerns']
