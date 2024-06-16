@@ -60,8 +60,8 @@ def update_h_barchart(data, selected_borough, current_figure):
     df_filtered = df_filtered[['Borough', 'Count']]
 
     # Initialize colors
-    default_color = '#B5B5B5'  # Color for unselected boroughs
-    viridis_colors = px.colors.sequential.Viridis
+    default_color = '#00008B'  # Color for unselected boroughs
+    selected_color = '#50C878'  # Green color for selected boroughs
 
     # Determine color scheme based on selection
     if selected_borough:
@@ -71,12 +71,8 @@ def update_h_barchart(data, selected_borough, current_figure):
         # Create the bar chart with selected boroughs colored and others default
         fig = go.Figure()
 
-        # Create a color map for boroughs
-        unique_boroughs = df_filtered['Borough'].unique()
-        color_map = {borough: viridis_colors[i % len(viridis_colors)] for i, borough in enumerate(unique_boroughs)}
-
         for index, row in df_filtered.iterrows():
-            color = color_map[row['Borough']] if row['selected'] else default_color
+            color = selected_color if row['selected'] else default_color
             fig.add_trace(go.Bar(
                 y=[row['Borough']],
                 x=[row['Count']],
@@ -101,7 +97,7 @@ def update_h_barchart(data, selected_borough, current_figure):
         yaxis_title="Borough",
         yaxis={'categoryorder': 'total ascending'},
         margin={'l': 100, 'b': 50, 't': 50, 'r': 0},
-        width=900,
+        width=700,
         height=600,
         showlegend=False,  # Turn off the legend
         plot_bgcolor='rgba(0, 0, 0, 0)',  # Make the plot background transparent
