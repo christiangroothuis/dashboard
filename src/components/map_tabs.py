@@ -125,8 +125,12 @@ agg_flag = False
 #      Callbacks
 # =====================
 # Define callback to update map based on dropdown selection
+df_data = pd.DataFrame()
+
+
 @callback(
     Output("choropleth-map", "figure"),
+    Output('shared-data-store', 'data'),
     [*[Input(str(i), "n_clicks") for i in range(0, 152)],
      Input('range-slider', 'value')],
 
@@ -149,6 +153,7 @@ def update_map(*args):
     global attribute_click_counts, previously_clicked_attribute
     global attribute_click_counts_agg, previously_clicked_attribute_agg
     global agg_flag
+    global df_data
 
     # Extract the number of clicks for each attribute selection
     attribute_clicks = args[:152]
@@ -340,7 +345,7 @@ def update_map(*args):
             data_frame=df_data, geojson=geo_data, locations="Borough", featureidkey="properties.name",
             color=sub_attribute, color_continuous_scale='viridis',
             projection="mercator")
-        
+
     fig.update_geos(fitbounds='locations', visible=False)
     fig.update_layout(margin={'l': 0, 'b': 0, 't': 0, 'r': 0},
                       width=800,
@@ -348,8 +353,7 @@ def update_map(*args):
 
     fig.update_coloraxes(colorbar_len=0.5)
 
-    return fig
-
+    return fig, df_data.to_dict('records')
 
 @callback(
     Output('selected_borough', 'data'),
