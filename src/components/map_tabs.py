@@ -1,6 +1,5 @@
 import dash_bootstrap_components as dbc
-import dash
-from dash import html, callback, Input, Output, State, callback_context, dcc
+from dash import html, callback, Input, Output, State, dcc
 import plotly.express as px
 import os
 from pathlib import Path
@@ -128,7 +127,7 @@ agg_flag = False
 # Define callback to update map based on dropdown selection
 @callback(
     Output("choropleth-map", "figure"),
-    [*[Input(str(i), "n_clicks") for i in range(0, 151)],
+    [*[Input(str(i), "n_clicks") for i in range(0, 152)],
      Input('range-slider', 'value')],
 
     # PAS
@@ -152,22 +151,22 @@ def update_map(*args):
     global agg_flag
 
     # Extract the number of clicks for each attribute selection
-    attribute_clicks = args[:151]
+    attribute_clicks = args[:152]
     attribute_clicks = [click if click is not None else 0 for click in attribute_clicks]
 
     # Extract the selected time interval
-    year_range = args[151]
+    year_range = args[152]
 
     # Determine which attribute was clicked most recently
     most_recently_clicked = None
-    for i in range(0, 151):
+    for i in range(0, 152):
         if attribute_clicks[i] > attribute_click_counts[str(i)]:
             agg_flag = False
             most_recently_clicked = i
             previously_clicked_attribute = most_recently_clicked
             attribute_click_counts[str(i)] = attribute_clicks[i]
 
-    aggregated_attribute_clicks = args[152:]
+    aggregated_attribute_clicks = args[153:]
     aggregated_attribute_clicks = [click if click is not None else 0 for click in aggregated_attribute_clicks]
     agg_attributes = ['PAS', 'Confidence', 'Trust', 'Stop&Search', 'StreetCrime', 'CrimeOutcomes']
     agg_attributes_zip = list(zip(aggregated_attribute_clicks, agg_attributes))
@@ -262,7 +261,7 @@ def update_map(*args):
                 sub_attribute = find_button_attribute(attributes, button_id)
 
         # Outcomes
-        elif 131 <= int(button_id) <= 151:
+        elif 131 <= int(button_id) <= 152:
             df_data = df_outcomes.copy()
             attributes = map_categories_dict['CrimeOutcomes']
             sub_attribute = find_button_attribute(attributes, button_id)
