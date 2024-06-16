@@ -15,7 +15,7 @@ from dash import no_update
 
 @callback(
     Output("h_linechart", "figure"),
-    Input('shared-data-store', 'data'),
+    Input('shared-data-store-lg', 'data'),
     Input('selected_borough', 'data'),
     prevent_initial_call=True
 )
@@ -24,6 +24,9 @@ def update_h_linechart(data, selected_borough):
         return no_update
 
     df_filtered = pd.DataFrame(data)
+    print("Initial DataFrame:", df_filtered.head())
+    if 'Year' not in df_filtered.columns:
+        raise ValueError("DataFrame does not contain 'Year' column!!")
 
     # Filter data based on selected boroughs
     if selected_borough:
@@ -33,11 +36,14 @@ def update_h_linechart(data, selected_borough):
     if 'Year' not in df_filtered.columns:
         raise ValueError("DataFrame does not contain 'Year' column.")
 
-    # Assuming '10-17' column exists in df_filtered
+    df_filtered['Count'] = df_filtered.drop(columns=['Borough']).sum(axis=1)
+    df_filtered = df_filtered[['Year', 'Borough', 'Count']]
+    print(df_filtered.head())
+
     fig = px.line(
         df_filtered,
         x='Year',
-        y='10-17',  # Update to the column name you want on the y-axis
+        y='Count',  # Update to the column name you want on the y-axis
         color='Borough',  # Color lines by Borough
         labels={'Year': 'Year', '10-17': '10-17 Count'},  # Update labels as needed
     )
