@@ -43,7 +43,6 @@
     background: #ffff;
     max-width: 250px;
     font-size: 1.5rem;
-    cursor: pointer;
     /*font-weight: bold;*/
 }
 .menu-level0-content {
@@ -84,7 +83,6 @@
 /*Default display state*/
 .menu-level0-title {
     display: block;
-    cursor: pointer;
 }
 .menu-level0-content, .menu-level1-content {
     display: none;
@@ -97,15 +95,31 @@
 .menu-level1 .menu-level1-content:hover{
     display: block !important;
     position: absolute!important;
-    cursor: pointer;
 }
 
 
 /*Change color when hover over text*/
-.menu-level0-title:hover, .menu-level1-title:hover, .menu-level2:hover {
-    color: #3D4A89;
+.menu-level2:hover {
+    color: #26A684;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/*Change color when hover over text*/
+.menu-level0-title:hover, .menu-level1-title:hover {
     font-weight: bold;
 }
+
+#PAS:hover,
+#Confidence:hover,
+#Trust:hover,
+#StreetCrime:hover,
+#CrimeOutcomes:hover,
+#Stop\&Search:hover{
+    color: #26A684;
+    cursor: pointer;
+}
+
 
 #sidebar:hover {
   width: 300px;
