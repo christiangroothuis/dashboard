@@ -60,14 +60,14 @@ def update_h_linechart(data, selected_borough):
 
 from dash import callback, Input, Output, dcc
 
-@callback(
-    Output('your-output-component-id', 'children'),
-    Input('selected-attribute-store', 'data')
-)
-def use_selected_attribute(selected_attribute):
-    if selected_attribute:
-        return f'The selected attribute is: {selected_attribute}'
-    return 'No attribute selected'
+#@callback(
+    #Output('your-output-component-id', 'children'),
+    #Input('selected-attribute-store', 'data')
+#)
+#def use_selected_attribute(selected_attribute):
+    #if selected_attribute:
+        #return f'The selected attribute is: {selected_attribute}'
+    #return 'No attribute selected'
 
 
 tooltip_layout = html.Div(
