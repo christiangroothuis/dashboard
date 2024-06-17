@@ -132,7 +132,7 @@ df_data = pd.DataFrame()
     Output("choropleth-map", "figure"),
     Output('shared-data-store', 'data'),
     Output('shared-data-store-lg', 'data'),
-    Output('selected-attribute-store', 'data'),
+    #Output('selected-attribute-store', 'data'),
 
     [*[Input(str(i), "n_clicks") for i in range(0, 152)],
      Input('range-slider', 'value')],
@@ -158,7 +158,7 @@ def update_map(*args):
     global attribute_click_counts_agg, previously_clicked_attribute_agg
     global agg_flag
     global df_data
-    global selected_attribute
+    #global selected_attribute
 
     # Extract the number of clicks for each attribute selection
     attribute_clicks = args[:152]
@@ -202,28 +202,28 @@ def update_map(*args):
         if button_id is None:
             df_data = df_pas_original.copy()
             sub_attribute = '"Good Job" local'  # Default to Trust_score if no button is clicked
-            selected_attribute = 'default'
+            #selected_attribute = 'default'
         # PAS
         elif 0 <= int(button_id) <= 37:
             df_data = df_pas_original.copy()
             if 0 <= int(button_id) <= 4:
                 attributes = map_categories_dict['PAS']['Confidence']
                 sub_attribute = find_button_attribute(attributes, button_id)
-                selected_attribute = 'PAS, Confidence'
+                #selected_attribute = 'PAS, Confidence'
             elif 5 <= int(button_id) <= 7:
                 attributes = map_categories_dict['PAS']['Trust']
                 sub_attribute = find_button_attribute(attributes, button_id)
-                selected_attribute = 'PAS, Trust'
+                #selected_attribute = 'PAS, Trust'
             elif 8 <= int(button_id) <= 9:
                 attributes = map_categories_dict['PAS']['Other']
                 sub_attribute = find_button_attribute(attributes, button_id)
-                selected_attribute = 'PAS, Other'
+                #selected_attribute = 'PAS, Other'
             elif 10 <= int(button_id) <= 37:
                 pas_granular_bool = True
                 df_data = df_pas_questions.copy()
                 attributes = map_categories_dict['PAS']['PAS-Granular']
                 sub_attribute = find_button_attribute(attributes, button_id)
-                selected_attribute = 'PAS, Granular'
+                #selected_attribute = 'PAS, Granular'
 
         # Economic and Ethnicity
         elif 38 <= int(button_id) <= 55:
@@ -365,10 +365,7 @@ def update_map(*args):
 
     fig.update_coloraxes(colorbar_len=0.5)
 
-    print(f"Selected attribute: {selected_attribute}")
-    if selected_attribute == '':
-        print('oh no')
 
-    return fig, df_data.to_dict('records'), df_lg_data.to_dict('records'), selected_attribute
 
+    return fig, df_data.to_dict('records'), df_lg_data.to_dict('records')
 
