@@ -66,7 +66,7 @@ dash_layout = dbc.Container([
     dcc.Store(id='selected_borough', data=[]),
     dcc.Store(id='shared-data-store', data=[]),
     dcc.Store(id='shared-data-store-lg', data=[]),
-    dcc.Store(id='selected-attribute-store', data=''),
+    #dcc.Store(id='selected-attribute-store', data=''),
 
     dbc.Row([
         dbc.Col([
