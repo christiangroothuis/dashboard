@@ -97,6 +97,7 @@ for column in extracted_columns_econ_percentage:
     if not np.issubdtype(df_economic_num[column].dtype, np.number):
         print(column, df_economic_num[column].dtype)
     df_economic_num[column] = df_economic_num[column] / df_economic_num['number_of_individuals']
+    df_economic_num[column] = df_economic_num[column] * 100
 
 df_economic_num['Full-Time:Part-time'] = df_economic_num['total_full_time'] / df_economic_num['total_part_time']
 df_economic_num['Active:Inactive Male'] = df_economic_num['economically_active_male'] / df_economic_num[
@@ -104,10 +105,10 @@ df_economic_num['Active:Inactive Male'] = df_economic_num['economically_active_m
 df_economic_num['Active:Inactive Female'] = df_economic_num['economically_active_female'] / \
                                             df_economic_num['Economically Inactive_female']
 
-renamed_columns_econ = ['Borough', 'Year', 'Manufacturing (%)', 'Constructing (%)', 'Hotels and Restaurants (%)',
-                        'Transport and Communication (%)', 'Banking and Finance (%)',
-                        'Public Administration, Education and Health (%)', 'Other Services (%)',
-                        'Job Density (%)', 'Employed (%)', 'Self-Employed (%)', 'Full-Time:Part-time',
+renamed_columns_econ = ['Borough', 'Year', 'Manufacturing [%]', 'Constructing [%]', 'Hotels and Restaurants [%]',
+                        'Transport and Communication [%]', 'Banking and Finance [%]',
+                        'Public Administration, Education and Health [%]', 'Other Services [%]',
+                        'Job Density [%]', 'Employed [%]', 'Self-Employed [%]', 'Full-Time:Part-time',
                         'Active:Inactive Male', 'Active:Inactive Female']
 
 column_mapping = {tup[0]: tup[1] for tup in zip(extracted_columns_econ, renamed_columns_econ)}
@@ -198,6 +199,54 @@ df_search_object = reformat_crime_data(df_stop_search, 'Search Object')
 df_ss_outcome = reformat_crime_data(df_stop_search, 'Outcome')
 df_crime_type = reformat_crime_data(df_street, 'Crime Type')
 df_last_outcome = reformat_crime_data(df_street, 'Last Out Cat')
+
+# ================================================ #
+# Normalise the data (divide by total population)  # (Not for PAS, since this one is already uniform)
+# ================================================ #
+total_population = df_ethnicity[['Borough', 'Year', 'Total']]
+total_population = total_population[total_population['Year'] == 2018]
+total_population = total_population.drop(columns='Year')
+
+print('pop in Southwark', total_population[total_population['Borough'] == 'Southwark'])
+
+def divide_by_population(dataframe, total_population, ethnicity):
+    if not ethnicity:
+        merged_df = pd.merge(dataframe, total_population, on=['Borough'], how='left')
+    else:
+        merged_df = dataframe.copy()
+    relevant_columns = list(dataframe.columns)
+    relevant_columns.remove('Borough')
+    relevant_columns.remove('Year')
+    for column in relevant_columns:
+        if column == 'Total':
+            continue
+        else:
+            merged_df[column] = merged_df[column] / merged_df['Total'] * 100
+            merged_df.rename(columns={column: f'{column} [%]'}, inplace=True)
+    if not ethnicity:
+        merged_df = merged_df.drop(columns='Total')
+    return merged_df
+
+
+df_outcomes = divide_by_population(df_outcomes, total_population, False)
+df_age_rage = divide_by_population(df_age_rage, total_population, False)
+df_officer_def_ethnicity = divide_by_population(df_officer_def_ethnicity, total_population, False)
+df_legislation = divide_by_population(df_legislation, total_population, False)
+df_search_object = divide_by_population(df_search_object, total_population, False)
+df_ss_outcome = divide_by_population(df_ss_outcome, total_population, False)
+df_crime_type = divide_by_population(df_crime_type, total_population, False)
+df_last_outcome = divide_by_population(df_last_outcome, total_population, False)
+df_ethnicity = divide_by_population(df_ethnicity, total_population, True)
+
+# ============================ #
+# Make sure London city is Nan #
+# ============================ #
+def london_nan(dataframe):
+    dataframe[dataframe['Borough'] == 'City of London'] = None
+    return dataframe
+
+df_economic = london_nan(df_economic)
+df_ethnicity = london_nan(df_ethnicity)
 
 # =================
 # Download as CSV #

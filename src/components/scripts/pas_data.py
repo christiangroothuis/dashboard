@@ -22,29 +22,6 @@ def restructure_PAS_data(df_data, category_types, geo_boroughs):
     # df_data1 = df_data.drop(columns=['Survey', 'MPS'])
     df_data1 = df_data.pivot_table(index=['Borough', 'Date'], columns='Measure', values='Proportion', fill_value=0).reset_index()
 
-    print('ALICIIIIAAA')
-    print(df_data1)
-
-    """
-    df_data1 = df_data.groupby(['Date', 'Borough', 'Measure'])['Proportion'].mean().reset_index()
-    print('ALICIIIIAAA')
-    print(df_data1)"""
-
-    """
-    df_data1 = pd.DataFrame(columns=['Date', 'Borough', *category_types])
-    df_data1['Date'] = df_data['Date']
-    df_data1['Borough'] = df_data['Borough']
-
-    for i in range(len(df_data)):
-        measure = df_data.loc[i, 'Measure']
-        value = df_data.loc[i, 'Proportion']
-        borough = df_data.loc[i, 'Borough']
-        df_data1.loc[df_data1.index[df_data1['Borough'] == borough].tolist()[0], measure] = value
-
-
-    print('HELLOOOO')
-    print(df_data1.loc[500, 'Trust MPS'])"""
-
     # Change necessary names, to make them match
     df_data1.loc[df_data1['Borough'] == 'City of Westminster', 'Borough'] = 'Westminster'
     df_data1.loc[df_data1['Borough'] == 'Richmond Upon Thames', 'Borough'] = 'City of London'

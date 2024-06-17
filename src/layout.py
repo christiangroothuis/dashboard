@@ -19,10 +19,13 @@ from components.correlation_graph import correlation_graph_layout
 # ====================================
 
 from dash import dcc
-
 dash_layout = dbc.Container([
     html.Link(href='/assets/styles.css', rel='stylesheet'),
-    dcc.Store(id='stored_BR_data', data=[]),  # Store to hold selected boroughs
+    dcc.Store(id='stored_data', data=[]),  # Store to hold selected boroughs
+    dcc.Store(id='selected_borough', data=[]),
+    dcc.Store(id='shared-data-store', data=[]),  # Store for shared data
+
+
     dbc.Row([
         dbc.Row(html.H1('Powered by the TU/e', className='top-panel')),
         dbc.Row(html.H1('𝓟oL𝛔cal', className='polocal-header', style={'margin-top': '24px'})),
@@ -35,7 +38,7 @@ dash_layout = dbc.Container([
             dbc.Row([dcc.RangeSlider(2015, 2021, 1,
                                 value=[2017, 2018],
                                 id='range-slider',
-                                marks= {i: str(i) for i in range(2015, 2022, 1)},
+                                marks={i: str(i) for i in range(2015, 2022, 1)},
                                 ),], style={'padding': '5px'}),
             dbc.Row([
                 dbc.Col(choropleth_map_layout, id='map-column'),
