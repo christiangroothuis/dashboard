@@ -52,9 +52,9 @@ def update_h_linechart(data, selected_borough):
     fig = px.line(
         df_filtered,
         x='Year',
-        y='10-17',  # Update to the column name you want on the y-axis
+        y='Count',  # Update to the column name you want on the y-axis
         color='Borough',  # Color lines by Borough
-        labels={'Year': 'Year', '10-17': '10-17 Count'},  # Update labels as needed
+        labels={'Year': 'Year', 'Count': 'Count'},  # Update labels as needed
     )
     fig.update_layout(
         plot_bgcolor='rgba(0, 0, 0, 0)',

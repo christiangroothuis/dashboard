@@ -24,7 +24,7 @@ dash_layout = dbc.Container([
     dcc.Store(id='stored_data', data=[]),  # Store to hold selected boroughs
     dcc.Store(id='selected_borough', data=[]),
     dcc.Store(id='shared-data-store', data=[]),
-    dcc.Store(id='shared-data-store', data=[]), # Store for shared data
+    dcc.Store(id='shared-data-store-lg', data=[]), # Store for shared data
 
 
     dbc.Row([
