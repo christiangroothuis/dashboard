@@ -131,6 +131,7 @@ df_data = pd.DataFrame()
 @callback(
     Output("choropleth-map", "figure"),
     Output('shared-data-store', 'data'),
+    Output('shared-data-store-lg', 'data')
     [*[Input(str(i), "n_clicks") for i in range(0, 152)],
      Input('range-slider', 'value')],
 
@@ -154,6 +155,7 @@ def update_map(*args):
     global attribute_click_counts_agg, previously_clicked_attribute_agg
     global agg_flag
     global df_data
+    global df_data_lg
 
     # Extract the number of clicks for each attribute selection
     attribute_clicks = args[:152]
@@ -189,6 +191,7 @@ def update_map(*args):
         button_id = str(previously_clicked_attribute)
 
     df_data = pd.DataFrame()
+    df_data_lg = pd.DataFrame()
     pas_granular_bool = False
 
     if button_id.isdigit():
@@ -302,6 +305,7 @@ def update_map(*args):
         sub_attribute = '"Good Job" local'  # Default to Trust_score if no button is clicked
 
     start_year, end_year = year_range
+    df_data_lg = df_data.copy()
     df_data = df_data[df_data['Year'].between(start_year, end_year)]
 
     if pas_granular_bool:
@@ -353,6 +357,6 @@ def update_map(*args):
 
     fig.update_coloraxes(colorbar_len=0.5)
 
-    return fig, df_data.to_dict('records')
+    return fig, df_data.to_dict('records'), df_data.to_dict('records')
 
 

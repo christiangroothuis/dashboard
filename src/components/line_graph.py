@@ -5,6 +5,14 @@ import os
 from pathlib import Path
 
 
+from dash import dcc, Input, Output, callback, no_update
+import plotly.express as px
+import pandas as pd
+import os
+from pathlib import Path
+from dash import html, State
+
+
 data_directory = os.path.join(Path(os.getcwd()).parent.parent, 'data')
 df_granular_pas = pd.read_csv(os.path.join(data_directory, 'age_range.csv'))
 
@@ -15,7 +23,7 @@ from dash import no_update
 
 @callback(
     Output("h_linechart", "figure"),
-    Input('shared-data-store', 'data'),
+    Input('shared-data-store-lg', 'data'),
     Input('selected_borough', 'data'),
     prevent_initial_call=True
 )
@@ -24,6 +32,9 @@ def update_h_linechart(data, selected_borough):
         return no_update
 
     df_filtered = pd.DataFrame(data)
+    print("Initial DataFrame:", df_filtered.head())
+    if 'Year' not in df_filtered.columns:
+        raise ValueError("DataFrame does not contain 'Year' column!!")
 
     # Filter data based on selected boroughs
     if selected_borough:
@@ -32,6 +43,10 @@ def update_h_linechart(data, selected_borough):
     # Check if 'Year' column exists in the filtered DataFrame
     if 'Year' not in df_filtered.columns:
         raise ValueError("DataFrame does not contain 'Year' column.")
+
+    df_filtered['Count'] = df_filtered.drop(columns=['Borough']).sum(axis=1)
+    df_filtered = df_filtered[['Year', 'Borough', 'Count']]
+    print(df_filtered.head())
 
     # Assuming '10-17' column exists in df_filtered
     fig = px.line(
@@ -49,3 +64,4 @@ def update_h_linechart(data, selected_borough):
     )
 
     return fig
+
