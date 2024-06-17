@@ -202,28 +202,24 @@ def update_map(*args):
         if button_id is None:
             df_data = df_pas_original.copy()
             sub_attribute = '"Good Job" local'  # Default to Trust_score if no button is clicked
-            #selected_attribute = 'default'
+
         # PAS
         elif 0 <= int(button_id) <= 37:
             df_data = df_pas_original.copy()
             if 0 <= int(button_id) <= 4:
                 attributes = map_categories_dict['PAS']['Confidence']
                 sub_attribute = find_button_attribute(attributes, button_id)
-                #selected_attribute = 'PAS, Confidence'
             elif 5 <= int(button_id) <= 7:
                 attributes = map_categories_dict['PAS']['Trust']
                 sub_attribute = find_button_attribute(attributes, button_id)
-                #selected_attribute = 'PAS, Trust'
             elif 8 <= int(button_id) <= 9:
                 attributes = map_categories_dict['PAS']['Other']
                 sub_attribute = find_button_attribute(attributes, button_id)
-                #selected_attribute = 'PAS, Other'
             elif 10 <= int(button_id) <= 37:
                 pas_granular_bool = True
                 df_data = df_pas_questions.copy()
                 attributes = map_categories_dict['PAS']['PAS-Granular']
                 sub_attribute = find_button_attribute(attributes, button_id)
-                #selected_attribute = 'PAS, Granular'
 
         # Economic and Ethnicity
         elif 38 <= int(button_id) <= 55:
@@ -308,7 +304,7 @@ def update_map(*args):
 
     if sub_attribute is None:
         df_data = df_pas_original.copy()
-        sub_attribute = '"Good Job" local'  # Default to Trust_score if no button is clicked
+        sub_attribute = '"Good Job" local'  # Default to Trust_score if no button is clicked  # Default to Trust_score if no button is clicked
 
     start_year, end_year = year_range
     df_lg_data = df_data.copy()
