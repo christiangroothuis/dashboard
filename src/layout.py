@@ -37,9 +37,6 @@ dash_layout = dbc.Container([
                                      marks={i: str(i) for i in range(2015, 2022, 1)},
                                      ), ], style={'padding': '5px'}),
             dbc.Row([
-                dbc.Col(tooltip_layout),
-            ]),
-            dbc.Row([
                 dbc.Col(choropleth_map_layout, id='map-column'),
                 dbc.Col(h_barchart_layout, id='h-barchart-column', className='graph-container'),
             ]),
@@ -47,6 +44,9 @@ dash_layout = dbc.Container([
     ]),
     dbc.Row([
         dbc.Col(line_graph_layout),
+    ]),
+    dbc.Row([
+        dbc.Col(tooltip_layout),
     ]),
 ], fluid=True, className='container')
 
