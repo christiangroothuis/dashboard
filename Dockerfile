@@ -10,4 +10,4 @@ COPY src /app/src
 
 EXPOSE 8050
 
-CMD ["gunicorn", "-b", "0.0.0.0:8050", "app:server"]
+CMD ["gunicorn", "-b", "0.0.0.0:8050", "app:server", "--workers=8", "--threads=8", "--worker-class=gthread"]
