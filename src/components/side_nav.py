@@ -52,6 +52,21 @@ cluster_df = cluster_df.pivot(index="Year", columns="Borough")
 cluster_df = cluster_df.fillna(method="ffill").fillna(method="bfill")
 
 
+#
+# pas_df = pd.read_csv(
+#     os.path.join(data_directory, "pas_original_raw.csv"), delimiter=";"
+# )
+
+# pas_df["Proportion"] = pas_df["Proportion"].str.replace(",", ".").astype(float)
+# pas_df["MPS"] = pas_df["MPS"].str.replace(",", ".").astype(float)
+# pas_df["Date"] = pd.to_datetime(pas_df["Date"], format="%d/%m/%Y")
+
+# # pivot the data
+# pas_df = pas_df.pivot_table(
+#     index="Date", columns=["Measure", "Borough"], values="Proportion"
+# )
+#
+
 def get_pas_pivot_dict() -> dict[str, dict[str, list[pd.Timestamp]]]:
     df = pd.read_csv(os.path.join(data_directory, "pas_data_pivots.csv"))
     df["pivot"] = pd.to_datetime(df["pivot"])
@@ -203,7 +218,6 @@ def generate_recommendations(n_clicks, selected_columns):
                             .values[0]
                         )
                     except IndexError:
-                        print(metric)
                         continue
 
                     last_value = cluster_df.xs(borough, axis=1, level="Borough")[
@@ -214,21 +228,30 @@ def generate_recommendations(n_clicks, selected_columns):
                         borough_predictions[borough_to_compare]
                         == current_borough_cluster  # borough and borough_to_compare are in the same cluster
                         and last_value
-                        > value_at_pivot
+                        < value_at_pivot
                         + 0.005  # last value is higher than at the pivot
+                        # and borough_to_compare is higher in the end than at the current borough in the end
+                        and cluster_df.xs(borough_to_compare, axis=1, level="Borough")[
+                            metric
+                        ].values[-1]
+                        > last_value + 0.1
                     ):
                         recommendations.append(
                             {
                                 "borough": borough,
                                 "metric": metric,
                                 "borough_to_compare": borough_to_compare,
-                                # compute euclidian distance between the two boroughs for all columns used in clustering
+                                # compute euclidian distance between the two boroughs for all columns used in clustering with normalized data
                                 "distance": np.linalg.norm(
-                                    df_before_timestamp.xs(
-                                        borough, axis=1, level="Borough"
+                                    scaler.fit_transform(
+                                        df_before_timestamp.xs(
+                                            borough, axis=1, level="Borough"
+                                        ).values
                                     )
-                                    - df_before_timestamp.xs(
-                                        borough_to_compare, axis=1, level="Borough"
+                                    - scaler.fit_transform(
+                                        df_before_timestamp.xs(
+                                            borough_to_compare, axis=1, level="Borough"
+                                        ).values
                                     )
                                 ),
                                 "pivot_point": timestamp.isoformat(),
@@ -311,6 +334,20 @@ def plot_charts(borough, measure, recommendations: list[Recommendation]):
             line_color="red",
             annotation_text="Pivot",
             annotation_position="top left",
+        )
+
+        # plot comparison borough
+        series = cluster_df.xs(rec["borough_to_compare"], axis=1, level="Borough")[
+            rec["metric"]
+        ]
+
+        fig.add_trace(
+            go.Scatter(
+                x=series.index,
+                y=series.values,
+                mode="lines",
+                name=rec["borough_to_compare"],
+            )
         )
 
         fig.update_layout(
