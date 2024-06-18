@@ -180,6 +180,7 @@ df_data = pd.DataFrame()
     Output("shared-data-store", "data"),
     Output("shared-data-store-lg", "data"),
     Output("attribute-tt", "data"),  # so the tooltip knows which attribute is selected
+    Output("attribute", "data"),
     [
         *[Input(str(i), "n_clicks") for i in range(0, 152)],
         Input("range-slider", "value"),
@@ -458,6 +459,7 @@ def update_map(*args):
             if col_name in df_data.columns:
                 df_data.drop(columns=col_name, inplace=True)
 
+
         fig = px.choropleth(
             data_frame=df_data,
             geojson=geo_data,
@@ -488,4 +490,10 @@ def update_map(*args):
 
     fig.update_coloraxes(colorbar_len=0.5)
 
-    return fig, df_data.to_dict("records"), df_data_lg.to_dict("records"), attribute
+    return (
+        fig,
+        df_data.to_dict("records"),
+        df_data_lg.to_dict("records"),
+        attribute,
+        sub_attribute,
+    )

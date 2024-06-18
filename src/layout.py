@@ -6,7 +6,6 @@ from components.map_tabs import map_tabs_layout, choropleth_map_layout
 from components.side_nav import button, side_bar
 from components.line_graph import line_graph_layout
 from components.h_bar_chart import h_barchart_layout
-from components.correlation_graph import correlation_graph_layout
 from components.tooltip import tooltip_layout
 
 
@@ -21,6 +20,7 @@ dash_layout = dbc.Container([
     dcc.Store(id='shared-data-store', data=[]),
     dcc.Store(id='shared-data-store-lg', data=[]),  # Store for shared data
     dcc.Store(id='attribute-tt', data=''),
+    dcc.Store(id='attribute', data=''),
 
     dbc.Row([
         dbc.Row(html.H1('Powered by the TU/e', className='top-panel')),
