@@ -46,18 +46,22 @@ import plotly.colors
     Output("h_barchart", "figure"),
     Input('shared-data-store', 'data'),
     Input('selected_borough', 'data'),
+    Input('attribute', 'data'),
     State("h_barchart", "figure"),
     prevent_initial_call=True
 )
-def update_h_barchart(data, selected_borough, current_figure):
+def update_h_barchart(data, selected_borough, attribute, current_figure):
     if data is None or not data:
         return current_figure
 
     df_filtered = pd.DataFrame(data)
 
+    # print(df_filtered.columns)
     # Sum the counts for each borough across all unique variables
-    df_filtered['Count'] = df_filtered.drop(columns=['Borough']).sum(axis=1)
-    df_filtered = df_filtered[['Borough', 'Count']]
+    #df_filtered['Count'] = df_filtered.drop(columns=['Borough']).sum(axis=1)
+    #df_filtered = df_filtered[['Borough', 'Count']]
+    # df_filtered = df_filtered.groupby('Borough', 'Year')
+    # print(df_filtered.columns)
 
     # Initialize colors
     default_color = '#00008B'  # Color for unselected boroughs
@@ -65,28 +69,31 @@ def update_h_barchart(data, selected_borough, current_figure):
 
     # Determine color scheme based on selection
     if selected_borough:
+        print(selected_borough)
         df_filtered['selected'] = df_filtered['Borough'].apply(lambda x: x in selected_borough)
-        df_filtered = df_filtered.sort_values(by=['selected', 'Count'], ascending=[False, False])
+        df_filtered = df_filtered.sort_values(by=['selected', attribute], ascending=[False, False])
 
         # Create the bar chart with selected boroughs colored and others default
         fig = go.Figure()
 
         for index, row in df_filtered.iterrows():
             color = selected_color if row['selected'] else default_color
+            print(color)
             fig.add_trace(go.Bar(
                 y=[row['Borough']],
-                x=[row['Count']],
+                x=[row[attribute]],
                 name=row['Borough'],
                 orientation='h',
-                marker_color=color,
+                marker=dict(
+                    color=color),
             ))
     else:
         # No borough selected, all boroughs get the default color
-        df_filtered = df_filtered.sort_values(by='Count', ascending=False)
+        df_filtered = df_filtered.sort_values(by=attribute, ascending=False)
         fig = px.bar(
             df_filtered,
             y='Borough',
-            x='Count',
+            x=attribute,
             orientation='h',
             color_discrete_sequence=[default_color]
         )
@@ -136,6 +143,5 @@ def update_selected_borough(map_click_data, bar_click_data, selected_borough):
                 selected_borough.append(clicked_borough)
 
     return selected_borough
-
 
 
