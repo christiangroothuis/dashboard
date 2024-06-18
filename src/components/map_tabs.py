@@ -131,6 +131,7 @@ df_data = pd.DataFrame()
 @callback(
     Output("choropleth-map", "figure"),
     Output('shared-data-store', 'data'),
+    Output('attribute', 'data'),
     [*[Input(str(i), "n_clicks") for i in range(0, 152)],
      Input('range-slider', 'value')],
 
@@ -353,6 +354,6 @@ def update_map(*args):
 
     fig.update_coloraxes(colorbar_len=0.5)
 
-    return fig, df_data.to_dict('records')
+    return fig, df_data.to_dict('records'), sub_attribute
 
 
