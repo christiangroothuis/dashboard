@@ -26,7 +26,6 @@ dash_layout = dbc.Container([
     dcc.Store(id='shared-data-store', data=[]),  # Store for shared data
     dcc.Store(id='attribute', data=[]),  # Store for shared data
 
-
     dbc.Row([
         dbc.Row(html.H1('Powered by the TU/e', className='top-panel')),
         dbc.Row(html.H1('𝓟oL𝛔cal', className='polocal-header', style={'margin-top': '24px'})),

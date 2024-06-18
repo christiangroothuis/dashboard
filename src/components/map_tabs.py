@@ -356,4 +356,3 @@ def update_map(*args):
 
     return fig, df_data.to_dict('records'), sub_attribute
 
-

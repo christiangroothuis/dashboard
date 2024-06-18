@@ -137,21 +137,28 @@
     margin-top: 0;
 }
 
+#sidebar-column {
+    overflow: hidden;
+}
+
 /*Slide in*/
 .slide-in {
     z-index: 10; /* to position it in front of the other content */
     position: absolute;
-    overflow: hidden; /* to prevent scrollbar appearing */
     left: 0;
-    height: 700px;
+    width: 600px;
+    height: 80vh;
+    overflow-y: auto;
     text-align: center;
-    color: white;
     transition: transform .5s ease;
+}
+.slide-in h4 {
+    color: white;
 }
 .slide-in-content {
   padding: 5px 20px;
   background: #3D4A89;
-    height: 700px;
+  min-height: 100%;
   transition: transform .5s ease; /* our nice transition */
 }
 .slide-in .slide-in-content {

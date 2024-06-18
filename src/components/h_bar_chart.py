@@ -145,4 +145,3 @@ def update_selected_borough(map_click_data, bar_click_data, selected_borough):
     return selected_borough
 
 
-
