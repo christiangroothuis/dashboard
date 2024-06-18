@@ -132,6 +132,7 @@ df_data = pd.DataFrame()
     Output("choropleth-map", "figure"),
     Output('shared-data-store', 'data'),
     Output('shared-data-store-lg', 'data'),
+    Output('attribute-tt', 'data'), #so the tooltip knows which attribute is selected
     [*[Input(str(i), "n_clicks") for i in range(0, 152)],
      Input('range-slider', 'value')],
 
@@ -155,6 +156,7 @@ def update_map(*args):
     global attribute_click_counts_agg, previously_clicked_attribute_agg
     global agg_flag
     global df_data
+    global attribute
 
 
     # Extract the number of clicks for each attribute selection
@@ -207,17 +209,21 @@ def update_map(*args):
             if 0 <= int(button_id) <= 4:
                 attributes = map_categories_dict['PAS']['Confidence']
                 sub_attribute = find_button_attribute(attributes, button_id)
+                attribute = 'PAS-Confidence'
             elif 5 <= int(button_id) <= 7:
                 attributes = map_categories_dict['PAS']['Trust']
                 sub_attribute = find_button_attribute(attributes, button_id)
+                attribute = 'PAS-Trust'
             elif 8 <= int(button_id) <= 9:
                 attributes = map_categories_dict['PAS']['Other']
                 sub_attribute = find_button_attribute(attributes, button_id)
+                attribute = 'PAS-Other'
             elif 10 <= int(button_id) <= 37:
                 pas_granular_bool = True
                 df_data = df_pas_questions.copy()
                 attributes = map_categories_dict['PAS']['PAS-Granular']
                 sub_attribute = find_button_attribute(attributes, button_id)
+                attribute = 'PAS-Granular'
 
         # Economic and Ethnicity
         elif 38 <= int(button_id) <= 55:
@@ -225,14 +231,17 @@ def update_map(*args):
                 df_data = df_ethnicity.copy()
                 attributes = map_categories_dict['Economic']['Demographic']
                 sub_attribute = find_button_attribute(attributes, button_id)
+                attribute = 'Economic-Demographic'
             elif 43 <= int(button_id) <= 49:
                 df_data = df_economic.copy()
                 attributes = map_categories_dict['Economic']['Industry types']
                 sub_attribute = find_button_attribute(attributes, button_id)
+                attribute = 'Economic-Industry'
             elif 50 <= int(button_id) <= 55:
                 df_data = df_economic.copy()
                 attributes = map_categories_dict['Economic']['Employment']
                 sub_attribute = find_button_attribute(attributes, button_id)
+                attribute = 'Economic-Employment'
 
         # Stop&Search
         elif 56 <= int(button_id) <= 92:
@@ -240,22 +249,27 @@ def update_map(*args):
                 df_data = df_age_rage.copy()
                 attributes = map_categories_dict['Stop&Search']['Age Range']
                 sub_attribute = find_button_attribute(attributes, button_id)
+                attribute = 'SS-Age'
             elif 61 <= int(button_id) <= 64:
                 df_data = df_officer_def_ethnicity.copy()
                 attributes = map_categories_dict['Stop&Search']['Officer Defined Ethnicity']
                 sub_attribute = find_button_attribute(attributes, button_id)
+                attribute = 'SS-Ethnicity'
             elif 65 <= int(button_id) <= 69:
                 df_data = df_legislation.copy()
                 attributes = map_categories_dict['Stop&Search']['Legislation']
                 sub_attribute = find_button_attribute(attributes, button_id)
+                attribute = 'SS-Legislation'
             elif 70 <= int(button_id) <= 77:
                 df_data = df_search_object.copy()
                 attributes = map_categories_dict['Stop&Search']['Search Object']
                 sub_attribute = find_button_attribute(attributes, button_id)
+                attribute = 'SS-Object'
             elif 78 <= int(button_id) <= 92:
                 df_data = df_ss_outcome.copy()
                 attributes = map_categories_dict['Stop&Search']['Stop and Search Outcome']
                 sub_attribute = find_button_attribute(attributes, button_id)
+                attribute = 'SS-Outcome'
 
         # StreetCrime
         elif 93 <= int(button_id) <= 130:
@@ -263,17 +277,19 @@ def update_map(*args):
                 df_data = df_crime_type.copy()
                 attributes = map_categories_dict['StreetCrime']['Crime Type Street']
                 sub_attribute = find_button_attribute(attributes, button_id)
+                attribute = 'SC-Street'
             elif 107 <= int(button_id) <= 130:
                 df_data = df_last_outcome.copy()
                 attributes = map_categories_dict['StreetCrime']['Last Outcome']
                 sub_attribute = find_button_attribute(attributes, button_id)
+                attribute = 'SC-Outcome'
 
         # Outcomes
         elif 131 <= int(button_id) <= 152:
             df_data = df_outcomes.copy()
             attributes = map_categories_dict['CrimeOutcomes']
             sub_attribute = find_button_attribute(attributes, button_id)
-
+            attribute = 'CrimeOutcomes'
         else:
             sub_attribute = None
 
@@ -281,22 +297,28 @@ def update_map(*args):
         if button_id == 'PAS':
             df_data = df_pas_agg.copy()
             sub_attribute = 'PAS'
+            attribute = 'PAS'
         elif button_id == 'Confidence':
             df_data = df_pas_agg.copy()
             sub_attribute = 'Confidence'
+            attribute = 'Confidence'
         elif button_id == 'Trust':
             df_data = df_pas_agg.copy()
             sub_attribute = 'Trust'
+            attribute = 'Trust'
 
         elif button_id == 'Stop&Search':
             df_data = df_ss_agg.copy()
             sub_attribute = 'Stop&Search'
+            attribute = 'SS'
         elif button_id == 'StreetCrime':
             df_data = df_street_agg.copy()
             sub_attribute = 'StreetCrime'
+            attribute = 'SC'
         elif button_id == 'CrimeOutcomes':
             df_data = df_outcomes.copy()
             sub_attribute = 'CrimeOutcomes'
+            attribute = 'CrimeOutcomes'
         else:
             sub_attribute = None
 
@@ -359,6 +381,6 @@ def update_map(*args):
 
     fig.update_coloraxes(colorbar_len=0.5)
 
-    return fig, df_data.to_dict('records'), df_data_lg.to_dict('records')
+    return fig, df_data.to_dict('records'), df_data_lg.to_dict('records'), attribute
 
 

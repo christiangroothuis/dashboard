@@ -25,9 +25,10 @@ from dash import no_update
     Output("h_linechart", "figure"),
     Input('shared-data-store-lg', 'data'),
     Input('selected_borough', 'data'),
+    Input('attribute-tt', 'data'),
     prevent_initial_call=True
 )
-def update_h_linechart(data, selected_borough):
+def update_h_linechart(data, selected_borough, attribute_tt):
     if data is None or not data or selected_borough is None:
         return no_update
 
@@ -47,7 +48,8 @@ def update_h_linechart(data, selected_borough):
     df_filtered['Count'] = df_filtered.drop(columns=['Borough']).sum(axis=1)
     df_filtered = df_filtered[['Year', 'Borough', 'Count']]
     print(df_filtered.head())
-
+    print('the selected attribute is:')
+    print(attribute_tt)
     # Assuming '10-17' column exists in df_filtered
     fig = px.line(
         df_filtered,

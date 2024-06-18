@@ -7,29 +7,8 @@ from components.side_nav import button, side_bar
 from components.line_graph import line_graph_layout
 from components.h_bar_chart import h_barchart_layout
 from components.correlation_graph import correlation_graph_layout
+from components.tooltip import tooltip_layout
 
-# Tooltip component
-tooltip = html.Div(
-    [
-        html.P(
-            [
-                "Want to know more about the selected category and the included attributes?",
-                html.Span(
-                    " Click here!",
-                    id="tooltip-target",
-                    style={"textDecoration": "underline", "cursor": "pointer"},
-                ),
-            ],
-            style={"textAlign": "center",   # Center the text
-                    "fontStyle": "italic"}   # Make the text italic
-        ),
-        dbc.Tooltip(
-            "Noun: rare, "
-            "the action or habit of estimating something as worthless.",
-            target="tooltip-target",
-        ),
-    ]
-)
 
 # ====================================
 # Create the layout
@@ -41,6 +20,7 @@ dash_layout = dbc.Container([
     dcc.Store(id='selected_borough', data=[]),
     dcc.Store(id='shared-data-store', data=[]),
     dcc.Store(id='shared-data-store-lg', data=[]),  # Store for shared data
+    dcc.Store(id='attribute-tt', data=''),
 
     dbc.Row([
         dbc.Row(html.H1('Powered by the TU/e', className='top-panel')),
@@ -57,17 +37,17 @@ dash_layout = dbc.Container([
                                      marks={i: str(i) for i in range(2015, 2022, 1)},
                                      ), ], style={'padding': '5px'}),
             dbc.Row([
-                    dbc.Col(tooltip),
-                ]),
+                dbc.Col(tooltip_layout),
+            ]),
             dbc.Row([
                 dbc.Col(choropleth_map_layout, id='map-column'),
                 dbc.Col(h_barchart_layout, id='h-barchart-column', className='graph-container'),
             ]),
-
         ]),
     ]),
     dbc.Row([
         dbc.Col(line_graph_layout),
     ]),
-
 ], fluid=True, className='container')
+
+
