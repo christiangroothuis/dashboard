@@ -393,8 +393,8 @@ def update_map(*args):
 
     start_year, end_year = year_range
     df_data_lg = df_data.copy()
-    df_data_lg["Count"] = df_data_lg.drop(columns=["Borough"]).sum(axis=1)
-    df_data_lg = df_data_lg[["Borough", "Count", "Year"]]
+    # df_data_lg["Count"] = df_data_lg.drop(columns=["Borough"]).sum(axis=1)
+    # df_data_lg = df_data_lg[["Borough", "Count", "Year"]]
     df_data = df_data[df_data["Year"].between(start_year, end_year)]
 
     if pas_granular_bool:
