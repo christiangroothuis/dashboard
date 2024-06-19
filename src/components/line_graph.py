@@ -25,10 +25,11 @@ from dash import no_update
     Output("h_linechart", "figure"),
     Input('shared-data-store-lg', 'data'),
     Input('selected_borough', 'data'),
+    Input('attribute', 'data'),
     Input('attribute-tt', 'data'),
     prevent_initial_call=True
 )
-def update_h_linechart(data, selected_borough, attribute_tt):
+def update_h_linechart(data, selected_borough, attribute, attribute_tt):
     if data is None or not data or selected_borough is None:
         return no_update
 
@@ -45,8 +46,9 @@ def update_h_linechart(data, selected_borough, attribute_tt):
     if 'Year' not in df_filtered.columns:
         raise ValueError("DataFrame does not contain 'Year' column.")
 
-    df_filtered['Count'] = df_filtered.drop(columns=['Borough']).sum(axis=1)
-    df_filtered = df_filtered[['Year', 'Borough', 'Count']]
+    # df_filtered['Count'] = df_filtered.drop(columns=['Borough']).sum(axis=1)
+
+    df_filtered = df_filtered[['Year', 'Borough', attribute]]
     print(df_filtered.head())
     print('the selected attribute is:')
     print(attribute_tt)
@@ -54,7 +56,7 @@ def update_h_linechart(data, selected_borough, attribute_tt):
     fig = px.line(
         df_filtered,
         x='Year',
-        y='Count',  # Update to the column name you want on the y-axis
+        y=attribute,  # Update to the column name you want on the y-axis
         color='Borough',  # Color lines by Borough
         labels={'Year': 'Year', 'Count': 'Count'},  # Update labels as needed
     )
