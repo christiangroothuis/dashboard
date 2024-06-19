@@ -35,17 +35,19 @@ button = dbc.Button(
 
 # create joined df of financial and ethical and geo data
 dfs_to_join = [
+    "economic.csv",
     "pas_original_aggregated.csv",
     "ethnicity.csv",
-    "economic.csv",
 ]
 
 cluster_df = pd.DataFrame(
     pd.read_csv(os.path.join(data_directory, dfs_to_join[0]), index_col=0)
 )
+cluster_df = cluster_df.reindex(sorted(cluster_df.columns), axis=1)
 
 for df_path in dfs_to_join[1:]:
     df = pd.read_csv(os.path.join(data_directory, df_path), index_col=0)
+    df = df.reindex(sorted(df.columns), axis=1)
     cluster_df = pd.merge(cluster_df, df, on=["Year", "Borough"], how="inner")
 
 cluster_df = cluster_df.pivot(index="Year", columns="Borough")
@@ -101,7 +103,7 @@ side_bar = html.Div(
             dcc.Dropdown(
                 id="column-selection",
                 options=cluster_df.columns.levels[0],
-                value=cluster_df.columns.levels[0],
+                # value=cluster_df.columns.levels[0],
                 multi=True,
                 placeholder="Select columns to cluster on",
                 style={"margin-bottom": "15px"},
