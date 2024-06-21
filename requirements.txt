@@ -44,3 +44,9 @@ tzdata==2024.1
 urllib3==2.2.1
 Werkzeug==3.0.3
 zipp==3.19.2
+attrs==23.2.0 
+click-plugins==1.1.1 
+cligj==0.7.2 
+fiona==1.9.6 
+geopandas==0.14.4 
+shapely==2.0.4
