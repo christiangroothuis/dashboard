@@ -1,3 +1,4 @@
+from typing import Dict
 import pandas as pd
 import os
 
@@ -330,3 +331,44 @@ os.makedirs("../data/economic-data/indexed/", exist_ok=True)
 
 output_file_path = "../data/economic-data/indexed/jobs-and-job-density.csv"
 df_melted.to_csv(output_file_path, index=False)
+
+datasets: Dict[str, pd.DataFrame] = {}
+
+for file in os.listdir("../data/economic-data/indexed"):
+    if file.endswith(".csv"):
+        datasets[file] = pd.read_csv(f"../data/economic-data/indexed/{file}")
+
+sets = [set(df['Area']) for df in datasets.values()]
+
+union_set = set.union(*sets) # all unique boroughs/areas
+intersection_set = set.intersection(*sets) # exist in all datasets
+
+non_common_areas = union_set - intersection_set
+
+for file in datasets:
+    datasets[file] = datasets[file].reset_index(drop=True).set_index(['Area', 'Year'])
+
+joined_df = pd.concat(datasets.values(), axis=1, join='inner')
+
+joined_df.reset_index(inplace=True)
+
+excluded_areas = [
+    "City of London",
+    "North East",
+    "North West",
+    "Yorkshire and The Humber",
+    "East Midlands",
+    "West Midlands",
+    "London",
+    "South East",
+    "South West",
+    "England",
+    "Wales",
+    "Scotland",
+    "Northern Ireland",
+    "United Kingdom",
+]
+
+joined_df = joined_df[~joined_df["Area"].isin(excluded_areas)]
+
+joined_df.to_csv("../data/economic-data/indexed/joined-economic.csv")

@@ -46,7 +46,7 @@ Unzip the folder into `data/original_crime_data`.
 
 ### Economic data
 1. Download the data from https://data.london.gov.uk/dataset/jobs-and-job-density-borough, https://data.london.gov.uk/dataset/average-income-tax-payers-borough, https://data.london.gov.uk/dataset/employment-industry-borough, https://data.london.gov.uk/dataset/employment-self-employed-full-time-and-part-time-and-gender-borough, https://data.london.gov.uk/dataset/economic-activity-gender, and https://data.london.gov.uk/dataset/economic-inactivity-gender. Place it in the `data/economic-data`.
-2. Run ....... . The joined data will be saved in economic.csv in the `data` subfolder.
+2. Run `python src/data_preprocessing/economic-preprocessing.py`. The joined data will be saved in economic.csv in the `data` subfolder.
 
 Once you have completed the above steps, do the final steps.
 1. Run src/components/scripts/aggregate_data.py.
