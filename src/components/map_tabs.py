@@ -237,12 +237,12 @@ def update_map(*args):
     ]
     agg_attributes_zip = list(zip(aggregated_attribute_clicks, agg_attributes))
 
-    for click, attribute in agg_attributes_zip:
-        if click > attribute_click_counts_agg[attribute]:
+    for click, agg_attribute in agg_attributes_zip:
+        if click > attribute_click_counts_agg[agg_attribute]:
             agg_flag = True
-            most_recently_clicked_agg = attribute
+            most_recently_clicked_agg = agg_attribute
             previously_clicked_attribute_agg = most_recently_clicked_agg
-            attribute_click_counts_agg[attribute] = click
+            attribute_click_counts_agg[agg_attribute] = click
 
     if agg_flag:
         button_id = str(previously_clicked_attribute_agg)
