@@ -18,7 +18,7 @@ attribute_tooltips = {
         '**Understand Issues**\n\n'
         'This evaluates the level of understanding, awareness, and sensitivity of local authorities to the diverse issues, challenges, and priorities facing the community. It involves efforts to empathize, educate, and address the underlying causes of community problems, including social, economic, and cultural factors.'
     ),
-    'PAS-Trust': (
+    'Trust': (
         '### PAS-Trust\n\n'
         'Trust is a multifaceted concept that encompasses various aspects of interpersonal '
         'relationships and perceptions of reliability, fairness, and responsiveness. In the context '
@@ -54,7 +54,7 @@ attribute_tooltips = {
         'This category includes the ethnic background of the defendants involved in criminal cases. Understanding the distribution of ethnicity among defendants can provide valuable insights into potential disparities, trends, and the effectiveness of justice administration across different ethnic groups.'
     ),
     'Economic-Employment': (
-        '##Economic Employment: \n\n'
+        '## Economic Employment: \n\n'
         '**Economically Inactive (Percentage)**\n\n'
         'Economically inactive measures the proportion of defendants who are economically inactive (active:inactive) '
         'out of the total number of defendants prosecuted. Economically inactive individuals are those who are not engaged '
@@ -282,7 +282,8 @@ tooltip_layout = html.Div(
 # Callback to update the markdown text based on 'attribute-tt'
 @callback(
     Output('tooltip-markdown', 'children'),
-    Input('attribute-tt', 'data')
+    Input('attribute', 'data')
 )
 def update_markdown_text(data):
-    return attribute_tooltips.get(data, "Noun: rare, the action or habit of estimating something as worthless.")
+    print("tooltip", data)
+    return attribute_tooltips.get(data, "")
