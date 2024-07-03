@@ -134,24 +134,35 @@ button_to_borough = {
     Output("choropleth-map", "figure"),
     Output("previously-clicked-attribute-store", "data"),
     Output("agg-flag-store", "data"),
-    Output("df-data-store", "data"),
-    [Input(str(i), "n_clicks") for i in range(153)] + [Input("range-slider", "value")],
+    Output("shared-data-store", "data"),
+    Output("shared-data-store-lg", "data"),
+    Output("attribute-tt", "data"),  # so the tooltip knows which attribute is selected
+    Output("attribute", "data"),
+    [Input(str(i), "n_clicks") for i in range(153)] +
+    [Input(f"{i}", "n_clicks") for i in ["PAS", "Confidence", "Trust", "Stop&Search", "StreetCrime", "CrimeOutcomes"]] +
+    [Input("range-slider", "value")],
     State("previously-clicked-attribute-store", "data"),
     State("agg-flag-store", "data"),
     State("df-data-store", "data"),
+    Input('attribute', 'data'),
+    Input('attribute-tt', 'data'),
 )
 def update_map(*args):
     ctx = dash.callback_context
-    if not ctx.triggered:
-        return dash.no_update
 
-    button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+    button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+    attribute_clicks = args[:153]
+    aggregated_clicks = args[153:159]
+    year_range = args[159]
+    previously_clicked_attribute = args[160]
+    agg_flag = args[161]
+    # df_data = args[162]
 
-    year_range = args[153]
-    agg_flag = args[155]
-    df_data = args[156]
+    df_data = pd.DataFrame()
+    df_data_lg = pd.DataFrame()
 
-    print(button_id)
+    attribute = args[163]
+    sub_attribute = args[164]
 
     if button_id.isdigit():
 
@@ -290,6 +301,10 @@ def update_map(*args):
         sub_attribute = (
             '"Good Job" local'  # Default to Trust_score if no button is clicked
         )
+    if attribute is None:
+        attribute = "PAS-Confidence"
+
+    df_data_lg = df_data.copy()
 
     start_year, end_year = year_range
     df_data = df_data[df_data["Year"].between(start_year, end_year)]
@@ -308,4 +323,4 @@ def update_map(*args):
     fig.update_layout(margin={"l": 0, "b": 0, "t": 0, "r": 0}, width=800, height=600)
     fig.update_coloraxes(colorbar_len=0.5)
 
-    return fig, button_id, agg_flag, df_data.to_dict("records")
+    return fig, button_id, agg_flag, df_data.to_dict("records"), df_data_lg.to_dict("records"), sub_attribute, attribute
